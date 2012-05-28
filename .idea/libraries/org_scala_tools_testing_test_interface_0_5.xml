@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="org.scala-tools.testing_test-interface_0.5">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/play-2.0.1/repository/local/org.scala-tools.testing/test-interface/0.5/jars/test-interface.jar!/" />
+      <root url="jar://$USER_HOME$/play-2.0.1/repository/local/org.scala-tools.testing/test-interface/0.5/jars/test-interface.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

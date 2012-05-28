@@ -1,0 +1,13 @@
+WebSql
+=====================================
+
+Génération dynamique de site à partir de query sql
+
+Les queries sont à définir dans /app/website/Site.scala
+L'id est le nom de la page
+exemple :
+http://localhost:9000/clients
+pour une liste
+ou
+http://localhost:9000/client/1
+pour le détail

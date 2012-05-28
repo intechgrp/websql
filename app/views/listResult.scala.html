@@ -1,0 +1,31 @@
+@(queryResult:SqlStmt)
+
+@main("WebSql") {
+
+<!-- Main hero unit for a primary marketing message or call to action -->
+<div class="hero-unit">
+    <h1>Websql</h1>
+    <p>A Rich Play! 2.0 Application</p>
+    <p><a class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+</div>
+
+<!-- Example row of columns -->
+<table id="listTable" class="table table-bordered">
+    <thead>
+    <tr>
+        @queryResult.columns().map { col =>
+            <th>@col</th>
+        }
+    </tr>
+    </thead>
+    <tbody>
+    @queryResult.values().map { row =>
+    <tr>
+    @row.map { cell =>
+        <td>@cell</td>
+        }
+    </tr>
+    }
+    </tbody>
+</table>
+}

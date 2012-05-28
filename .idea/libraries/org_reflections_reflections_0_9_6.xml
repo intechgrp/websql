@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="org.reflections_reflections_0.9.6">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/play-2.0.1/repository/local/org.reflections/reflections/0.9.6/jars/reflections.jar!/" />
+      <root url="jar://$USER_HOME$/play-2.0.1/repository/local/org.reflections/reflections/0.9.6/jars/reflections.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

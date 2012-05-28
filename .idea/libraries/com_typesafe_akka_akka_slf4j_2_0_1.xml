@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="com.typesafe.akka_akka-slf4j_2.0.1">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/play-2.0.1/repository/local/com.typesafe.akka/akka-slf4j/2.0.1/jars/akka-slf4j.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
