@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="org.slf4j_slf4j-api_1.6.1">
-    <CLASSES>
-      <root url="jar://$USER_HOME$/play-2.0.1/repository/cache/org.slf4j/slf4j-api/jars/slf4j-api-1.6.1.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
