@@ -4,3 +4,7 @@ project/target
 target
 tmp
 .history
+.idea
+.idea_modules
+*.iml
+*.lock

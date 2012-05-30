@@ -1,11 +1,13 @@
-@(queryResult:SqlStmt)
+@(queryResult:SqlStmt, detail:Option[(String,String)])
 
 @main("WebSql") {
 
 <!-- Main hero unit for a primary marketing message or call to action -->
 <div class="hero-unit">
     <h1>Websql</h1>
+
     <p>A Rich Play! 2.0 Application</p>
+
     <p><a class="btn btn-primary btn-large">Learn more &raquo;</a></p>
 </div>
 
@@ -14,14 +16,21 @@
     <thead>
     <tr>
         @queryResult.columns().map { col =>
-            <th>@col</th>
+        <th>@col</th>
         }
     </tr>
     </thead>
     <tbody>
-    @queryResult.values().map { row =>
-    <tr>
-    @row.map { cell =>
+    @queryResult.result.map { row =>
+    @detail match {
+        case Some((id,detailPage)) =>  {
+                <tr onclick="parent.location='@routes.Application.pageWithParm(detailPage, row.get(id).get.toString())'">
+                    }
+        case None => {
+                <tr>
+                    }
+    }
+        @row.values.map { cell =>
         <td>@cell</td>
         }
     </tr>
