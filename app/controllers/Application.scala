@@ -17,12 +17,7 @@ object Application extends Controller {
   def page(id: String) = Action {
     val thePage = Site.pages.find(_.id == id)
     thePage match {
-      case Some(p: Page) =>
-        p.pageType match {
-          case "LIST" => Ok(views.html.listResult(SqlStmt.runSelect(p.query.get)))
-          case "DETAIL" => Ok(views.html.detail(SqlStmt.runSelect(p.query.get)))
-          case _ => NotFound
-        }
+      case Some(p: Page) => Ok(p.template(SqlStmt.runSelect(p.query.get)))
       case None => NotFound
     }
   }
@@ -30,12 +25,7 @@ object Application extends Controller {
   def pageWithParm(id: String, param: String) = Action {
     val thePage = Site.pages.find(_.id == id)
     thePage match {
-      case Some(p: Page) =>
-        p.pageType match {
-          case "LIST" => Ok(views.html.listResult(SqlStmt.runSelect(p.query.get, param)))
-          case "DETAIL" => Ok(views.html.detail(SqlStmt.runSelect(p.query.get, param)))
-          case _ => NotFound
-        }
+      case Some(p: Page) => Ok(p.template(SqlStmt.runSelect(p.query.get, param)))
       case None => NotFound
     }
   }

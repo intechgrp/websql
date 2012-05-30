@@ -32,9 +32,9 @@
           <a class="brand" href="#">Websql</a>
           <div class="nav-collapse">
             <ul class="nav">
-              <li class="active"><a href="@routes.Application.index">Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
+                @website.Site.menu.map { item =>
+              <li><a href="@routes.Application.page(item._2)">@item._1</a></li>
+                }
             </ul>
           </div><!--/.nav-collapse -->
         </div>
