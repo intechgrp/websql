@@ -15,7 +15,7 @@
 <table id="listTable" class="table table-bordered">
     <thead>
     <tr>
-        @queryResult.columns().map { col =>
+        @queryResult.getTitles().map { col =>
         <th>@col</th>
         }
     </tr>

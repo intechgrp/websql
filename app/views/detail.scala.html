@@ -12,7 +12,7 @@
 <!-- Example row of columns -->
 <form class="form-horizontal">
     <fieldset>
-        @queryResult.result.head.map { field =>
+        @queryResult.getResult().head.map { field =>
         <div class="control-group">
             <label class="control-label">@field._1</label>
             <div class="controls">

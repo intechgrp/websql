@@ -17,7 +17,7 @@ object Application extends Controller {
   def page(id: String) = Action {
     val thePage = Site.s.getPage(id)
     thePage match {
-      case Some(p: Page) => Ok(p.template(SqlStmt.runSelect(p.query.get), p.detail))
+      case Some(p: Page) => Ok(p.template(SqlStmt.runSelect(p.query.get, p.titles), p.detail))
       case None => NotFound("**** Page " + id + " non trouvée ****÷\n" + Site.s.toString())
     }
   }
@@ -25,8 +25,8 @@ object Application extends Controller {
   def pageWithParm(id: String, param: String) = Action {
     val thePage = Site.s.getPage(id)
     thePage match {
-      case Some(p: Page) => Ok(p.template(SqlStmt.runSelect(p.query.get, param), p.detail))
-      case None => NotFound
+      case Some(p: Page) => Ok(p.template(SqlStmt.runSelect(p.query.get, param, p.titles), p.detail))
+      case None => NotFound("**** Page " + id + " non trouvée ****÷\n" + Site.s.toString())
     }
   }
 
