@@ -28,7 +28,8 @@ object Site {
 
   val mainMenu = Map[String, String](
     "Liste Clients" -> "clients",
-    "Liste Comptes" -> "comptes"
+    "Liste Comptes" -> "comptes",
+    "Liste Comptes/Client" -> "accounts"
   )
 
   val sitePages = List[Page](
@@ -37,7 +38,10 @@ object Site {
     ListPage("clients") fromQuery "Select *  from Client"
       withDetailPage("CLIENT.ID", "client")
       withTitles List[String]("Identifiant", "Nom", "Prénom", "Adresse"),
-    ListPage("comptes") fromQuery "Select * from Compte"
+    ListPage("comptes") fromQuery "Select * from Compte",
+
+    Page("accounts",Some("Select * from Client"),{views.html.accounts(_,_)}) ,
+    ListPage("clientAccounts") fromQuery  "Select * from Compte where client = {param}"
   )
 
   val s: Site = new Site

@@ -40,12 +40,4 @@
     </tbody>
 </table>
 
-@table(queryResult,
-    "[Identifiant|Prenom|Nom|Adresse]",
-    "[CLIENT.ID|CLIENT.PRENOM|CLIENT.NOM|CLIENT.ADRESSE]",
-    withClass="table table-bordered",
-    withLinks="[CLIENT.NOM->client(CLIENT.ID) | CLIENT.PRENOM->client(CLIENT.ID)]"
-)
-
-
 }

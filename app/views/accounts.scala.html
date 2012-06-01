@@ -1,0 +1,26 @@
+@(queryResult:SqlStmt, detail:Option[(String,String)])
+
+@import views.helpers.Table._
+
+@main("WebSql") {
+
+<!-- Main hero unit for a primary marketing message or call to action -->
+<div class="hero-unit">
+    <h1>Websql</h1>
+
+    <p>A Rich Play! 2.0 Application</p>
+
+    <p><a class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+</div>
+
+@table(queryResult,
+    "[Prenom|Nom|Adresse|Comptes]",
+    "[CLIENT.PRENOM|CLIENT.NOM|CLIENT.ADRESSE|Afficher les comptes]",
+
+    withClass="table table-bordered",
+
+    withLinks="[CLIENT.NOM->client(CLIENT.ID) | CLIENT.PRENOM->client(CLIENT.ID) | Afficher les comptes->clientAccounts(CLIENT.ID)]"
+)
+
+
+}

@@ -72,13 +72,15 @@ object Table {
     "<tr>" +
       columns.foldLeft("") {(acc, col) =>
         acc +
-        "<td>" +
-        links.get(col.name).map{link=>
-          "<a href=\"/"+link.pageDest+"/"+data.get(link.columnId).getOrElse("")+"\">"+data.get(col.name).getOrElse("")+"</a>"}
-        .getOrElse(data.get(col.name).getOrElse("")) +
-        "</td>"
+        tableCell(data,data.get(col.name).getOrElse(col.name), links.get(col.name))
       } +
     "</tr>"
+
+  private def tableCell(values:Map[String, Any], data:Any, link:Option[Link])=
+    "<td>"+
+      link.map{l=>"<a href=\"/"+l.pageDest+"/"+values.get(l.columnId).getOrElse("")+"\">"+data+"</a>"}
+      .getOrElse(data) +
+    "</td>"
 
   private def endTable = "</table>"
 
