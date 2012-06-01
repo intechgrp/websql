@@ -13,11 +13,39 @@
     <p><a class="btn btn-primary btn-large">Learn more &raquo;</a></p>
 </div>
 
+<!-- Example row of columns-->
+<table id="listTable" class="table table-bordered">
+    <thead>
+    <tr>
+        @queryResult.getTitles().map { col =>
+        <th>@col</th>
+        }
+    </tr>
+    </thead>
+    <tbody>
+    @queryResult.result.map { row =>
+    @detail match {
+        case Some((id,detailPage)) =>  {
+                <tr onclick="parent.location='@routes.Application.pageWithParm(detailPage, row.get(id).get.toString())'">
+                    }
+        case None => {
+                <tr>
+                    }
+    }
+        @row.values.map { cell =>
+        <td>@cell</td>
+        }
+    </tr>
+    }
+    </tbody>
+</table>
+
 @table(queryResult,
-    "[Identifiant|Nom|Prenom|Adresse]",
-    "[CLIENT.ID|CLIENT.NOM|CLIENT.PRENOM|CLIENT.ADRESSE]",
+    "[Identifiant|Prenom|Nom|Adresse]",
+    "[CLIENT.ID|CLIENT.PRENOM|CLIENT.NOM|CLIENT.ADRESSE]",
     withClass="table table-bordered",
-    withLinks="[CLIENT.NOM->client(CLIENT.ID) | CLIENT.PRENOM->client(CLIENT.ID)]")
+    withLinks="[CLIENT.NOM->client(CLIENT.ID) | CLIENT.PRENOM->client(CLIENT.ID)]"
+)
 
 
 }

@@ -31,15 +31,19 @@ object Site {
     "Liste Comptes" -> "comptes"
   )
 
+  val sitePages = List[Page](
+    DetailPage("client") fromQuery "Select * from Client where id = {param}"
+      withTitles List[String]("Identifiant", "Nom du gars", "Prénom", "Adresse"),
+    ListPage("clients") fromQuery "Select *  from Client"
+      withDetailPage("CLIENT.ID", "client")
+      withTitles List[String]("Identifiant", "Nom", "Prénom", "Adresse"),
+    ListPage("comptes") fromQuery "Select * from Compte"
+  )
+
   val s: Site = new Site
 
   {
-    val client = DetailPage("client") fromQuery "Select * from Client where id = {param}"
-    s.addPage(client)
-    val clients = ListPage("clients") fromQuery "Select *  from Client" withDetailPage ("CLIENT.ID", "client")
-    s.addPage(clients)
-    val comptes = ListPage("comptes") fromQuery "Select * from Compte"
-    s.addPage(comptes)
+    s.addPages(sitePages)
     s.menu = mainMenu
   }
 
