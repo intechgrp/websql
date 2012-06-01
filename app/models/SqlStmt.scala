@@ -7,7 +7,10 @@ import scala.collection.Map
 import anorm._
 
 case class SqlStmt(result: List[Map[String, Any]], titles: Option[List[String]]) {
-  def columns(): List[String] = result.head.keys.toList
+  def columns(): List[String] = result match {
+    case Nil => List()
+    case _ => result.head.keys.toList
+  }
 
   def values(): List[List[Any]] = result.map(_.values.toList)
 
