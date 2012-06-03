@@ -1,8 +1,9 @@
 @(queryResult:SqlStmt, detail:Option[(String,String)])
 
 @import views.helpers.Table._
+@import website.Site._
 
-@main("WebSql") {
+@main(WebSite.title) {
 
 <!-- Main hero unit for a primary marketing message or call to action -->
 <div class="hero-unit">
@@ -13,31 +14,6 @@
     <p><a class="btn btn-primary btn-large">Learn more &raquo;</a></p>
 </div>
 
-<!-- Example row of columns-->
-<table id="listTable" class="table table-bordered">
-    <thead>
-    <tr>
-        @queryResult.getTitles().map { col =>
-        <th>@col</th>
-        }
-    </tr>
-    </thead>
-    <tbody>
-    @queryResult.result.map { row =>
-    @detail match {
-        case Some((id,detailPage)) =>  {
-                <tr onclick="parent.location='@routes.Application.pageWithParm(detailPage, row.get(id).get.toString())'">
-                    }
-        case None => {
-                <tr>
-                    }
-    }
-        @row.values.map { cell =>
-        <td>@cell</td>
-        }
-    </tr>
-    }
-    </tbody>
-</table>
+@table(queryResult,detail)
 
 }

@@ -28,21 +28,18 @@ case class SqlStmt(result: List[Map[String, Any]], titles: Option[List[String]])
 }
 
 object SqlStmt {
-  def runSelect(stmt: String, titles: Option[List[String]]): SqlStmt = {
+
+  def runSelect(stmt: String, param: Option[String], titles: Option[List[String]]): SqlStmt = {
     val queryResult = DB.withConnection {
       implicit connection =>
-        SQL(stmt).apply().map(_.asMap).toList
+        param.map(parm =>
+          SQL(stmt).on("param" -> parm).apply().map(_.asMap).toList
+        ).getOrElse(
+          SQL(stmt).apply().map(_.asMap).toList
+        )
     }
     SqlStmt(queryResult, titles)
   }
 
-  def runSelect(stmt: String, param: String, titles: Option[List[String]]): SqlStmt = {
-    val queryResult = DB.withConnection {
-      implicit connection =>
-        SQL(stmt).on("param" -> param).apply().map(_.asMap).toList
-    }
-    SqlStmt(queryResult, titles)
-  }
-
-  def runSelect(stmt: String): SqlStmt = runSelect(stmt, None)
+  def runSelect(stmt: String): SqlStmt = runSelect(stmt, None, None)
 }

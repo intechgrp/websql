@@ -5,7 +5,7 @@ import play.api.db._
 import anorm._
 import play.api.mvc._
 import models._
-import website.Site
+import website.Site._
 
 
 object Application extends Controller {
@@ -14,20 +14,17 @@ object Application extends Controller {
     Ok(views.html.index("Your new application is ready."))
   }
 
-  def page(id: String) = Action {
-    val thePage = Site.s.getPage(id)
+  private def page(id: String, param: Option[String]) = Action {
+    val thePage = WebSite.getPage(id)
     thePage match {
-      case Some(p: Page) => Ok(p.template(SqlStmt.runSelect(p.query.get, p.titles), p.detail))
-      case None => NotFound("**** Page " + id + " non trouvée ****÷\n" + Site.s.toString())
+      case Some(p: Page) => Ok(p.display(param))
+      case None => NotFound("**** Page " + id + " non trouvée ****÷\n" + WebSite.toString())
     }
   }
 
-  def pageWithParm(id: String, param: String) = Action {
-    val thePage = Site.s.getPage(id)
-    thePage match {
-      case Some(p: Page) => Ok(p.template(SqlStmt.runSelect(p.query.get, param, p.titles), p.detail))
-      case None => NotFound("**** Page " + id + " non trouvée ****÷\n" + Site.s.toString())
-    }
-  }
+  def page(id: String, param: String = null): Action[AnyContent] = page(id, param match {
+    case null => None
+    case _ => Some(param)
+  })
 
 }

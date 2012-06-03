@@ -8,7 +8,7 @@ package models
  * To change this template use File | Settings | File Templates.
  */
 
-case class Page(id: String, query: Option[String], template: (SqlStmt, Option[(String, String)]) => play.api.templates.Html, detail: Option[(String, String)] = None, titles:Option[List[String]] = None) {
+case class Page(id: String, query: Option[String], template: (SqlStmt, Option[(String, String)]) => play.api.templates.Html, detail: Option[(String, String)] = None, titles: Option[List[String]] = None) {
 
   def fromQuery(theQuery: String) = Page(id, Some(theQuery), template, detail, titles)
 
@@ -17,6 +17,10 @@ case class Page(id: String, query: Option[String], template: (SqlStmt, Option[(S
   def withDetailPage(theId: String, theDetail: String) = Page(id, query, template, Some(theId, theDetail), titles)
 
   def withTitles(theTitles: List[String]) = Page(id, query, template, detail, Some(theTitles))
+
+  def display(param: Option[String]) = {
+    template(SqlStmt.runSelect(query.get, param, titles), detail)
+  }
 
 }
 

@@ -5,7 +5,7 @@ import models.Page._
 import collection.mutable.MutableList
 
 
-class Site {
+case class Site(title:String) {
   val pages: MutableList[Page] = MutableList[Page]()
   var menu: Map[String, String] = Map[String, String]()
 
@@ -18,9 +18,6 @@ class Site {
   }
 
   def getPage(theId: String): Option[Page] = pages.find(_.id == theId)
-
-  override def toString() = pages.toString()
-
 
 }
 
@@ -44,11 +41,11 @@ object Site {
     ListPage("clientAccounts") fromQuery  "Select * from Compte where client = {param}"
   )
 
-  val s: Site = new Site
+  val WebSite: Site = new Site("POC WebSQL")
 
   {
-    s.addPages(sitePages)
-    s.menu = mainMenu
+    WebSite.addPages(sitePages)
+    WebSite.menu = mainMenu
   }
 
 
