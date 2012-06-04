@@ -8,8 +8,9 @@ object SiteDesc {
   val title = "POC WebSql"
 
   val mainMenu = Map[String, String](
-    "Liste Clients" -> "clients",
-    "Liste Comptes" -> "Liste comptes",
+    "Liste des Clients" -> "clients",
+    "Liste des Comptes" -> "comptes",
+    "Noms clients" -> "nomcli",
     "Liste Comptes/Client" -> "accounts"
   )
 
@@ -20,6 +21,7 @@ object SiteDesc {
       withDetailPage("CLIENT.ID", "client")
       withTitles List[String]("Identifiant", "Nom", "Prénom", "Adresse"),
     ListPage("comptes") fromQuery "Select * from Compte",
+    ListPage("nomcli") fromQuery "Select nom from client",
 
     TemplatePage("accounts", views.html.accounts(_, _)) fromQuery "Select * from Client",
 
@@ -27,4 +29,7 @@ object SiteDesc {
   )
 
 }
+
+
+
 

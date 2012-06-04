@@ -32,6 +32,6 @@ object Application extends Controller {
 
   def saveSiteDesc(source:String) = Action {
     website.SiteUtils.flushSiteDescSource(source)
-    Ok(views.html.editSiteDesc(website.SiteUtils.siteDescSource))
+    Redirect("/editSite")
   }
 }
