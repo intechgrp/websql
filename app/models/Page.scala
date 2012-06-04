@@ -29,4 +29,6 @@ object Page {
 
   def DetailPage(id: String) = Page(id, None, views.html.detail(_, _))
 
+  def TemplatePage(id:String, template: (SqlStmt, Option[(String, String)]) => play.api.templates.Html) = Page(id, None, template)
+
 }

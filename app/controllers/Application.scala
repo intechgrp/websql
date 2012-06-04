@@ -1,12 +1,11 @@
 package controllers
 
 import play.api._
-import play.api.db._
-import anorm._
 import play.api.mvc._
 import models._
 import website.Site._
 
+import java.io.File
 
 object Application extends Controller {
 
@@ -27,4 +26,12 @@ object Application extends Controller {
     case _ => Some(param)
   })
 
+  def editSiteDesc = Action {
+    Ok(views.html.editSiteDesc(website.SiteUtils.siteDescSource))
+  }
+
+  def saveSiteDesc(source:String) = Action {
+    website.SiteUtils.flushSiteDescSource(source)
+    Ok(views.html.editSiteDesc(website.SiteUtils.siteDescSource))
+  }
 }

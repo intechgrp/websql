@@ -4,6 +4,9 @@
 
 # Home page
 GET     /                           controllers.Application.index
+GET     /editSite                   controllers.Application.editSiteDesc
+GET     /saveSite                   controllers.Application.saveSiteDesc(source:String)
+
 GET     /:id                        controllers.Application.page(id, param = null)
 GET     /:id/:param                 controllers.Application.page(id, param)
 
