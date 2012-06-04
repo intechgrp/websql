@@ -1,5 +1,7 @@
 package models
 
+
+
 /**
  * Created with IntelliJ IDEA.
  * User: croiseaux
@@ -18,10 +20,27 @@ case class Page(id: String, query: Option[String], template: (SqlStmt, Option[(S
 
   def withTitles(theTitles: List[String]) = Page(id, query, template, detail, Some(theTitles))
 
-  def display(param: Option[String]) = {
+  def html(param: Option[String]) = {
     template(SqlStmt.runSelect(query.get, param, titles), detail)
   }
 
+  def xml(param: Option[String]) = {
+     val result = SqlStmt.runSelect(query.get, param, titles)
+     "<" + id + ">" +
+    result.getResult().map( row => "<item>" +
+      row.map(el => "<" + el._1 + ">" + el._2 + "</" + el._1 +">").mkString + "</item>"
+    ).mkString +
+     "</" +id + ">"
+  }
+
+  def json(param: Option[String]) = {
+    val result = SqlStmt.runSelect(query.get, param, titles)
+    "{\""+ id + "\":[" +
+      result.getResult().map( row => "{" +
+        row.map(el => "\"" + el._1 + "\":\"" + el._2 + "\"").mkString(",") + "}"
+      ).mkString(",") +
+      "]}"
+  }
 }
 
 object Page {
