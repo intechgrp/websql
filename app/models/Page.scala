@@ -1,7 +1,6 @@
 package models
 
 
-
 /**
  * Created with IntelliJ IDEA.
  * User: croiseaux
@@ -25,18 +24,19 @@ case class Page(id: String, query: Option[String], template: (SqlStmt, Option[(S
   }
 
   def xml(param: Option[String]) = {
-     val result = SqlStmt.runSelect(query.get, param, titles)
-     "<" + id + ">" +
-    result.getResult().map( row => "<item>" +
-      row.map(el => "<" + el._1 + ">" + el._2 + "</" + el._1 +">").mkString + "</item>"
-    ).mkString +
-     "</" +id + ">"
+    val result = SqlStmt.runSelect(query.get, param, titles)
+    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" +
+    "<" + id + ">" +
+      result.getResult().map(row => "<item>" +
+        row.map(el => "<" + el._1.replace(' ', '_') + ">" + el._2 + "</" + el._1.replace(' ', '_') + ">").mkString + "</item>"
+      ).mkString +
+      "</" + id + ">"
   }
 
   def json(param: Option[String]) = {
     val result = SqlStmt.runSelect(query.get, param, titles)
-    "{\""+ id + "\":[" +
-      result.getResult().map( row => "{" +
+    "{\"" + id + "\":[" +
+      result.getResult().map(row => "{" +
         row.map(el => "\"" + el._1 + "\":\"" + el._2 + "\"").mkString(",") + "}"
       ).mkString(",") +
       "]}"
@@ -48,6 +48,6 @@ object Page {
 
   def DetailPage(id: String) = Page(id, None, views.html.detail(_, _))
 
-  def TemplatePage(id:String, template: (SqlStmt, Option[(String, String)]) => play.api.templates.Html) = Page(id, None, template)
+  def TemplatePage(id: String, template: (SqlStmt, Option[(String, String)]) => play.api.templates.Html) = Page(id, None, template)
 
 }
