@@ -5,6 +5,10 @@
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
+# Authentication
+POST    /login                      controllers.Application.login
+GET     /logout                     controllers.Application.logout
+
 # Home page
 GET     /                           controllers.Application.index
 GET     /editSite                   controllers.Application.editSiteDesc
@@ -15,3 +19,4 @@ GET     /:id/:param                 controllers.Application.page(id, param, form
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
+

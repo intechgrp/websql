@@ -20,6 +20,9 @@ object Global extends GlobalSettings {
             .on("iban" -> "1234-564321", "description" -> "Compte Courant", "solde" -> 1000, "client" -> 1).executeInsert()
           SQL("insert into Compte(iban, description, solde, client) values ({iban}, {description}, {solde}, {client})")
             .on("iban" -> "6547-567294", "description" -> "Compte Epargne", "solde" -> 199.99, "client" -> 1).executeInsert()
+
+          SQL("insert into USER (LOGIN,PASSWORD,USERNAME) values ({login},{password},{name})")
+            .on("login"->"ade", "password"->"adepassword", "name"->"Antoine").executeInsert()
       }
   }
 

@@ -5,7 +5,7 @@ import models.Page._
 import collection.mutable.MutableList
 
 
-case class Site(title:String) {
+case class Site(title:String, authentication:Option[String]=None) {
   val pages: MutableList[Page] = MutableList[Page]()
   var menu: Map[String, String] = Map[String, String]()
 
@@ -23,7 +23,7 @@ case class Site(title:String) {
 
 object Site {
 
-  val WebSite: Site = new Site(SiteDesc.title)
+  val WebSite: Site = new Site(SiteDesc.title,SiteDesc.authentication)
 
   {
     WebSite.addPages(SiteDesc.pages)

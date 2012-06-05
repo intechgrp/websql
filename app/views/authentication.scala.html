@@ -1,0 +1,36 @@
+@(error:Option[String]=None)
+@import website.Site._
+
+@main(WebSite.title) {
+
+<!-- Main hero unit for a primary marketing message or call to action -->
+<div class="hero-unit">
+    <h1>Websql</h1>
+
+    <p>Dynamic Web Site generation based on SQL Queries</p>
+
+</div>
+<form class="form-horizontal" method="POST" action="@routes.Application.login">
+    <fieldset>
+        <div class="control-group @error.map{t=>error}">
+            <label class="control-label" for="username">Login:</label>
+            <div class="controls">
+                <input type="text" class="input-xlarge" id="username" name="username">
+                @error.map{msg=>
+                <span class="help-inline">@msg</span>
+                }
+            </div>
+        </div>
+        <div class="control-group @error.map{t=>error}">
+            <label class="control-label" for="password">Password:</label>
+            <div class="controls">
+                <input type="password" class="input-xlarge" id="password" name="password">
+            </div>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Log in</button>
+        </div>
+    </fieldset>
+</form>
+
+}

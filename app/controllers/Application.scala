@@ -1,11 +1,15 @@
 package controllers
 
 import play.api._
+import data.Form
+import db.DB
 import play.api.mvc._
 import models._
 import website.Site._
+import play.api.data.Forms._
 
-import java.io.File
+import play.api.Play.current
+import anorm._
 
 object Application extends Controller {
 
@@ -13,9 +17,11 @@ object Application extends Controller {
     Ok(views.html.index("Your new application is ready."))
   }
 
-  private def page(id: String, param: Option[String], format: Option[String]) = Action {
+  private def page(id: String, param: Option[String], format: Option[String]) = Action {implicit request=>
     val thePage = WebSite.getPage(id)
     thePage match {
+      case Some(p:Page) if p.secured && WebSite.authentication.isDefined && request.session.get("username").isEmpty =>
+        Ok(views.html.authentication()).withSession("page"->id,"param"->param.getOrElse(""))
       case Some(p: Page) =>
         format match {
           case Some("html") => Ok(p.html(param))
@@ -43,4 +49,37 @@ object Application extends Controller {
     website.SiteUtils.flushSiteDescSource(source)
     Redirect("/editSite")
   }
+
+  def login = Action{implicit request=>
+    Form(tuple(
+        "username" -> text,
+        "password" -> text
+    )).bindFromRequest.fold(
+      errors => BadRequest,
+      {folder =>
+        DB.withConnection {
+          implicit connection =>
+            SQL(WebSite.authentication.get)
+              .on("login"->folder._1,"password"->folder._2)
+              .apply().headOption match {
+                case None => Forbidden(views.html.authentication(Some("Incorrect username/password")))
+                case Some(row) =>
+                  Redirect(
+                    request.session.get("page") match {
+                      case Some(page:String)=>
+                        "/"+page+
+                        (request.session.get("param") match {
+                          case Some(param:String) if param.length()>0 => "/"+param
+                          case _ => ""
+                        })
+                      case _ => "/"
+                    }
+                  ).withSession("username"->row.data(0).toString)
+              }
+        }
+      }
+    )
+  }
+
+  def logout=Action(request=>Redirect(routes.Application.index()).withNewSession)
 }
