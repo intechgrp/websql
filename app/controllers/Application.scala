@@ -64,17 +64,8 @@ object Application extends Controller {
               .apply().headOption match {
                 case None => Forbidden(views.html.authentication(Some("Incorrect username/password")))
                 case Some(row) =>
-                  Redirect(
-                    request.session.get("page") match {
-                      case Some(page:String)=>
-                        "/"+page+
-                        (request.session.get("param") match {
-                          case Some(param:String) if param.length()>0 => "/"+param
-                          case _ => ""
-                        })
-                      case _ => "/"
-                    }
-                  ).withSession("username"->row.data(0).toString)
+                  Redirect("/"+request.session.get("page").getOrElse("")+request.session.get("param").filter(_.length()>0).map("/"+_).getOrElse(""))
+                    .withSession("username"->row.data(0).toString)
               }
         }
       }
