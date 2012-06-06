@@ -6,7 +6,8 @@ CREATE TABLE CLIENT (
     ID                  BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     NOM                 VARCHAR(255)    NOT NULL,
     PRENOM              VARCHAR(255)    NOT NULL DEFAULT '',
-    ADRESSE             VARCHAR(255)    NOT NULL DEFAULT ''
+    ADRESSE             VARCHAR(255)    NOT NULL DEFAULT '',
+    LOGIN               VARCHAR(50)     NOT NULL DEFAULT ''
 );
 
 CREATE TABLE COMPTE (
