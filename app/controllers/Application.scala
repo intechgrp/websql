@@ -72,5 +72,25 @@ object Application extends Controller {
     )
   }
 
+  def create(id:String)=Action{request=>
+    val thePage = WebSite.getPage(id)
+    thePage match {
+      case Some(p: PageForm) =>
+        val data=p.form.get.fields.map{field=>
+          (field.name,toParameterValue(request.body.asFormUrlEncoded.get(field.name).headOption.getOrElse("")))
+        }
+        DB.withConnection{
+          implicit connection =>
+            SQL(p.query.get)
+              .on(data:_*)
+              .executeInsert() match {
+                case Some(id) => Redirect("/"+p.resultPage.getOrElse(""))
+                case _ => InternalServerError("**** An error occured on creation ****")
+            }
+        }
+      case None => NotFound("**** PageForm " + id + " non trouvée ****÷\n" + WebSite.toString())
+    }
+  }
+
   def logout=Action(request=>Redirect(routes.Application.index()).withNewSession)
 }

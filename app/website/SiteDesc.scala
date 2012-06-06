@@ -2,6 +2,7 @@ package website
 
 import models.Page
 import models.Page._
+import models.Forms._
 
 object SiteDesc {
 
@@ -11,6 +12,7 @@ object SiteDesc {
 
   val mainMenu = Map[String, String](
     "Liste des Clients" -> "clients",
+    "Nouveau client" -> "newClient",
     "Liste des Comptes" -> "comptes",
     "Mes comptes" -> "myAccounts"
   )
@@ -27,7 +29,16 @@ object SiteDesc {
     ListPage("myAccounts")
       fromQuery "Select COMPTE.IBAN,COMPTE.DESCRIPTION,COMPTE.SOLDE,COMPTE.DEVISE from COMPTE, CLIENT where COMPTE.CLIENT = CLIENT.ID and CLIENT.LOGIN = {username}"
       withTitles List[String]("IBAN","Description","Solde","Devise")
-      withAuthentication
+      withAuthentication,
+
+    CreatePage("newClient")
+      withForm Form(
+        Field("nom") ofType text withConstraint isMandatory,
+        Field("prenom") ofType text withConstraint isMandatory,
+        Field("address") ofType text
+      )
+      fromQuery "insert into CLIENT (NOM,PRENOM,ADRESSE) VALUES ({nom},{prenom},{address})"
+      withResultPage("clients")
   )
 
 }

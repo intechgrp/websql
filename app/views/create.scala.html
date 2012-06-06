@@ -1,0 +1,30 @@
+@(page:PageForm,username:Option[String])
+@import website.Site._
+@import models.Forms._
+
+@main(WebSite.title, username) {
+
+<!-- Main hero unit for a primary marketing message or call to action -->
+<div class="hero-unit">
+    <h1>Websql</h1>
+
+    <p>Dynamic Web Site generation based on SQL Queries</p>
+
+</div>
+<form class="form-horizontal" method="POST" action="@routes.Application.create(page.id)">
+    <fieldset>
+        @page.form.get.fields.map{field=>
+            <div class="control-group">
+                <label class="control-label @field.fieldType.className" for="@field.name">@field.name :</label>
+                <div class="controls">
+                    <input type="text" class="input-xlarge" id="@field.name" name="@field.name">
+                </div>
+            </div>
+        }
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Create</button>
+        </div>
+    </fieldset>
+</form>
+
+}

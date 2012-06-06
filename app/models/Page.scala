@@ -1,6 +1,9 @@
 package models
 
 
+import models.Forms.Form
+import play.api.templates.Html
+
 /**
  * Created with IntelliJ IDEA.
  * User: croiseaux
@@ -9,23 +12,28 @@ package models
  * To change this template use File | Settings | File Templates.
  */
 
-case class Page(id: String, query: Option[String], template: (SqlStmt, Option[(String, String)], Option[String]) => play.api.templates.Html, detail: Option[(String, String)] = None, titles: Option[List[String]] = None, secured:Boolean=false) {
+sealed class Page(val id: String, val secured:Boolean=false){
+  def withAuthentication:Page=new Page(id, true)
+  def html(param:Option[String], username:Option[String])=Html("")
+  def xml(param:Option[String])=""
+  def json(param:Option[String])=""
+}
 
-  def fromQuery(theQuery: String) = Page(id, Some(theQuery), template, detail, titles)
+case class PageView(pId:String, query: Option[String], template: (SqlStmt, Option[(String, String)], Option[String]) => play.api.templates.Html, detail: Option[(String, String)] = None, titles: Option[List[String]] = None) extends Page(pId,false) {
 
-  def withTemplate(t: (SqlStmt, Option[(String, String)], Option[String]) => play.api.templates.Html) = Page(id, query, t, detail, titles)
+  def fromQuery(theQuery: String) = PageView(id, Some(theQuery), template, detail, titles)
 
-  def withDetailPage(theId: String, theDetail: String) = Page(id, query, template, Some(theId, theDetail), titles)
+  def withTemplate(t: (SqlStmt, Option[(String, String)], Option[String]) => play.api.templates.Html) = PageView(id, query, t, detail, titles)
 
-  def withTitles(theTitles: List[String]) = Page(id, query, template, detail, Some(theTitles))
+  def withDetailPage(theId: String, theDetail: String) = PageView(id, query, template, Some(theId, theDetail), titles)
 
-  def withAuthentication:Page=this.copy(secured=true)
+  def withTitles(theTitles: List[String]) = PageView(id, query, template, detail, Some(theTitles))
 
-  def html(param: Option[String], username:Option[String]) = {
+  override def html(param: Option[String], username:Option[String]) = {
     template(SqlStmt.runSelect(query.get, param, titles, username), detail,username)
   }
 
-  def xml(param: Option[String]) = {
+  override def xml(param: Option[String]) = {
     val result = SqlStmt.runSelect(query.get, param, titles, None)
     "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" +
     "<" + id + ">" +
@@ -35,7 +43,7 @@ case class Page(id: String, query: Option[String], template: (SqlStmt, Option[(S
       "</" + id + ">"
   }
 
-  def json(param: Option[String]) = {
+  override def json(param: Option[String]) = {
     val result = SqlStmt.runSelect(query.get, param, titles, None)
     "{\"" + id + "\":[" +
       result.getResult().map(row => "{" +
@@ -45,11 +53,20 @@ case class Page(id: String, query: Option[String], template: (SqlStmt, Option[(S
   }
 }
 
+case class PageForm(pId:String, query:Option[String], form:Option[Form], template: (PageForm, Option[String])=> play.api.templates.Html, resultPage:Option[String]=None) extends Page(pId,false){
+  def withForm(form:Form)=copy(form=Some(form))
+  def fromQuery(query:String)=copy(query=Some(query))
+  override def html(param: Option[String], username:Option[String]) = template(this,username)
+  def withResultPage(result: String) = copy(resultPage=Some(result) )
+}
+
 object Page {
-  def ListPage(id: String) = Page(id, None, views.html.listResult(_, _, _))
+  def ListPage(id: String) = PageView(id, None, views.html.listResult(_, _, _))
 
-  def DetailPage(id: String) = Page(id, None, views.html.detail(_, _, _))
+  def DetailPage(id: String) = PageView(id, None, views.html.detail(_, _, _))
 
-  def TemplatePage(id: String, template: (SqlStmt, Option[(String, String)], Option[String]) => play.api.templates.Html) = Page(id, None, template)
+  def TemplatePage(id: String, template: (SqlStmt, Option[(String, String)], Option[String]) => play.api.templates.Html) = PageView(id, None, template)
+
+  def CreatePage(id: String) = PageForm(id, None, None, views.html.create(_,_))
 
 }
