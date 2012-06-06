@@ -24,7 +24,7 @@ object SiteDesc {
       withTitles List[String]("Identifiant", "Nom", "Prénom", "Adresse"),
     ListPage("comptes") fromQuery "Select * from Compte" withDetailPage("COMPTE.ID", "compte"),
 
-    TemplatePage("accounts", views.html.accounts(_, _)) fromQuery "Select * from Client" withAuthentication,
+    TemplatePage("accounts", views.html.accounts(_, _, _)) fromQuery "Select * from Client" withAuthentication,
 
     ListPage("clientAccounts") fromQuery "Select * from Compte where client = {param}"
   )

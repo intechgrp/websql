@@ -1,8 +1,8 @@
-@(queryResult:SqlStmt, detail:Option[(String,String)])
+@(queryResult:SqlStmt, detail:Option[(String,String)], username:Option[String])
 
 @import website.Site._
 
-@main(WebSite.title) {
+@main(WebSite.title, username) {
 
 <!-- Main hero unit for a primary marketing message or call to action -->
 <div class="hero-unit">

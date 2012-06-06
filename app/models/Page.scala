@@ -9,11 +9,11 @@ package models
  * To change this template use File | Settings | File Templates.
  */
 
-case class Page(id: String, query: Option[String], template: (SqlStmt, Option[(String, String)]) => play.api.templates.Html, detail: Option[(String, String)] = None, titles: Option[List[String]] = None, secured:Boolean=false) {
+case class Page(id: String, query: Option[String], template: (SqlStmt, Option[(String, String)], Option[String]) => play.api.templates.Html, detail: Option[(String, String)] = None, titles: Option[List[String]] = None, secured:Boolean=false) {
 
   def fromQuery(theQuery: String) = Page(id, Some(theQuery), template, detail, titles)
 
-  def withTemplate(t: (SqlStmt, Option[(String, String)]) => play.api.templates.Html) = Page(id, query, t, detail, titles)
+  def withTemplate(t: (SqlStmt, Option[(String, String)], Option[String]) => play.api.templates.Html) = Page(id, query, t, detail, titles)
 
   def withDetailPage(theId: String, theDetail: String) = Page(id, query, template, Some(theId, theDetail), titles)
 
@@ -21,8 +21,8 @@ case class Page(id: String, query: Option[String], template: (SqlStmt, Option[(S
 
   def withAuthentication:Page=this.copy(secured=true)
 
-  def html(param: Option[String]) = {
-    template(SqlStmt.runSelect(query.get, param, titles), detail)
+  def html(param: Option[String], username:Option[String]) = {
+    template(SqlStmt.runSelect(query.get, param, titles), detail,username)
   }
 
   def xml(param: Option[String]) = {
@@ -46,10 +46,10 @@ case class Page(id: String, query: Option[String], template: (SqlStmt, Option[(S
 }
 
 object Page {
-  def ListPage(id: String) = Page(id, None, views.html.listResult(_, _))
+  def ListPage(id: String) = Page(id, None, views.html.listResult(_, _, _))
 
-  def DetailPage(id: String) = Page(id, None, views.html.detail(_, _))
+  def DetailPage(id: String) = Page(id, None, views.html.detail(_, _, _))
 
-  def TemplatePage(id: String, template: (SqlStmt, Option[(String, String)]) => play.api.templates.Html) = Page(id, None, template)
+  def TemplatePage(id: String, template: (SqlStmt, Option[(String, String)], Option[String]) => play.api.templates.Html) = Page(id, None, template)
 
 }

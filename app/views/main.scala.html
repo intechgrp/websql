@@ -1,4 +1,4 @@
-@(title: String)(content: Html)
+@(title: String, username:Option[String])(content: Html)
 
 @import website.Site._
 
@@ -39,8 +39,19 @@
               <li><a href="/@item._2">@item._1</a></li>
                 }
             </ul>
-                <a class="btn btn-danger pull-right" href="/editSite">Edit site</a>
-              </div><!--/.nav-collapse -->
+              <div class="btn-group pull-right">
+                  @username.map{user=>
+                      <a class="btn dropdown-toggle btn-user" data-toggle="dropdown" href="#">
+                          @user
+                          <span class="caret"></span>
+                      </a>
+                      <ul class="dropdown-menu">
+                          <li><a href="@routes.Application.logout">Logout</a></li>
+                      </ul>
+                }
+                <a class="btn btn-danger" href="/editSite">Edit site</a>
+              </div>
+          </div><!--/.nav-collapse -->
         </div>
       </div>
     </div>
