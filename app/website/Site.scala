@@ -23,7 +23,7 @@ case class Site(title:String, authentication:Option[String]=None) {
 
 object Site {
 
-  val WebSite: Site = new Site(SiteDesc.title,SiteDesc.authentication)
+  val WebSite: Site = new Site(SiteDesc.title,SiteDesc.authentication match { case null => None case _ => Some(SiteDesc.authentication)})
 
   {
     WebSite.addPages(SiteDesc.pages)

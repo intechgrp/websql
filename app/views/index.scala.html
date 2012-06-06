@@ -33,7 +33,7 @@
             <div class="nav-collapse">
                 <div class="nav-collapse">
                     <ul class="nav">
-                        <li><a href="/accounts">Démo</a></li>
+                        <li><a href="/myAccounts">Démo</a></li>
                     </ul>
                     <a class="btn btn-danger pull-right" href="/editSite">Edit site</a>
                 </div><!--/.nav-collapse -->
@@ -152,6 +152,21 @@
         <p>
             You can change your site without any editor directly in the browser by clicking the edit site button.
         </p>
+
+        <p><a class="btn btn-primary" href="#">View details &raquo;</a></p>
+    </div>
+
+    <div class="quality">
+        <h2>Need some user specific content?</h2>
+
+        <p>
+            Just provide an authentication query for your Web Site :
+        </p>
+        <pre class="prettyprint"><code>authentication="select login from users where login = {login} and password = {password}"</code></pre>
+        <p>
+            And secure pages as you want !
+        </p>
+        <pre class="prettyprint"><code>ListPage("accounts") fromQuery "Select * from accounts where user = {username}" withAuthentication</code></pre>
 
         <p><a class="btn btn-primary" href="#">View details &raquo;</a></p>
     </div>
