@@ -1,45 +1,151 @@
 @(message: String)
 
-@main("WebSql") {
+<!DOCTYPE html>
 
-<link rel="stylesheet" media="screen" href="assets/lib/prettify/prettify.css">
-<script src="assets/lib/prettify/prettify.js" type="text/javascript"></script>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A Rich Play! 2.0 Application">
 
-<!-- Main hero unit for a primary marketing message or call to action -->
-<div class="hero-unit">
-    <h1>Websql</h1>
-    <p>Dynamic Web Site generation based on SQL Queries</p>
+    <title>WebSql</title>
+    <link rel="shortcut icon" type="image/png" href="/assets/images/favicon.png">
+
+    <link rel="stylesheet" media="screen" href="/assets/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" media="screen" href="/assets/lib/bootstrap/css/bootstrap-responsive.min.css">
+    <link rel="stylesheet" media="screen" href="/assets/stylesheets/main.css">
+
+    <script src="/assets/lib/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="/assets/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+
+</head>
+<body onload="prettyPrint()">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="/">Websql</a>
+
+            <div class="nav-collapse">
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li><a href="/accounts">Démo</a></li>
+                    </ul>
+                    <a class="btn btn-danger pull-right" href="/editSite">Edit site</a>
+                </div><!--/.nav-collapse -->
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+    </div>
 </div>
 
-<div class="row">
-    <div class="span4">
-        <h2>Create a new page with ease</h2>
+<div class="container">
+
+    <link rel="stylesheet" media="screen" href="assets/lib/prettify/prettify.css">
+    <script src="assets/lib/prettify/prettify.js" type="text/javascript"></script>
+
+    <style type="text/css" media="screen">
+
+        html {
+            width: 100%;
+            height: 100%;
+            font-family: "plantagenet cherokee free"
+        }
+
+        body {
+            margin: 0px;
+            width: 100%;
+            height: 100%;
+            background-color: #f2f2f2;
+        }
+
+        .hero-unit {
+            text-align: center;
+        }
+
+        .hero-unit h1 {
+            font-size: 65px;
+        }
+
+        .quality {
+            padding: 0 100px 10px 100px;
+            margin-top: 50px;
+        }
+
+        .quality h2 {
+            text-align: center;
+            font-size: 52px;
+            margin: 0 0 10px 0;
+            letter-spacing: -1px;
+            color: black;
+        }
+
+        .quality p {
+            margin: 0 0 30px 0;
+            padding: 0;
+            font-weight: 350;
+            font-size: 26px;
+            line-height: 1.2em;
+            width: 90%;
+            color: #AA9C84;
+            display: block;
+            -webkit-margin-before: 0.83em;
+            -webkit-margin-after: 0.83em;
+            -webkit-margin-start: 0px;
+            -webkit-margin-end: 0px;
+        }
+
+        .quality code {
+            font-size: 20px;
+        }
+
+    </style>
+
+    <div class="hero-unit">
+        <h1>Websql</h1>
+
+        <h2>Dynamic Web Site generation based on SQL Queries</h2>
+    </div>
+
+    <div class="quality">
+        <h2>Create your site in few minutes</h2>
+
         <p>
-            WebSql allows you to dynamically create a new page only by entering a new SQL Query
+            WebSql allows you to create a dynamic Web Site by entering SQL Queries.<br/>
             To create a new page that lists all clients :
-            <pre class="prettyprint"><code>DetailPage("client")
-  fromQuery "Select * from Client where id = {param}"</code></pre>
+        <pre class="prettyprint"><code>ListPage("clients") fromQuery "Select * from Client"</code></pre>
         </p>
-        <p><a class="btn" href="#">View details &raquo;</a></p>
+        <p><a class="btn btn-primary" href="#">View details &raquo;</a></p>
     </div>
-    <div class="span4">
+    <div class="quality">
         <h2>Generate html, xml or json</h2>
+
         <p>
-            You can generate html rendering either based on standard templates or by creating a specific template.
-            Specific templates are easy to create with our simple syntax.<br/>
-            You can also generate xml or json rendering by explicitly specifying the format.
+            You can generate <strong>html</strong> rendering either based on standard templates or by creating a
+            specific template.
+            Specific templates are easy to create with our intuitive syntax.<br/>
+            You can also generate <strong>xml</strong> or <strong>json</strong> rendering by explicitly specifying the
+            format.
             <pre><code><a href="/client/1" target="_blank">http://www.yoursite.com/client/1</a>
-<a href="/client/1?format=xml" target="_blank">http://www.yoursite.com/client/1?format=xml</a>
-<a href="/client/1?format=json" target="_blank">http://www.yoursite.com/client/1/?format=json</a></code></pre>        </p>
-        <p><a class="btn" href="#">View details &raquo;</a></p>
+                <a href="/client/1?format=xml" target="_blank">http://www.yoursite.com/client/1?format=xml</a>
+                <a href="/client/1?format=json" target="_blank">http://www.yoursite.com/client/1/?format=json</a></code></pre>
+        </p>
+        <p><a class="btn btn-primary" href="#">View details &raquo;</a></p>
     </div>
-    <div class="span4">
-        <h2>Dynamically modify your site directly in the browser</h2>
+    <div class="quality">
+        <h2>Live edit your site in the browser</h2>
+
         <p>
             You can change your site without any editor directly in the browser by clicking the edit site button.
         </p>
-        <p><a class="btn" href="#">View details &raquo;</a></p>
-    </div>
-</div>
 
-}
+        <p><a class="btn btn-primary" href="#">View details &raquo;</a></p>
+    </div>
+
+</div>
+</body>
+</html>
