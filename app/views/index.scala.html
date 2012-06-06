@@ -67,18 +67,27 @@
             border: 2px solid rgba(0,0,0,0.3);
             border-radius: 15px;
             box-shadow: 5px 5px 20px #777;
-            width: 100%;
             height: 180px;
             padding: 10px;
             padding-top: 40px;
             background-color: white;
-            text-align: center;
             vertical-align: middle;
+            margin: 0 100px 0 100px;
+        }
+        .box img {
+            float: left;
+            left: 3px;
+            margin-top: -20px;
         }
 
         .box h1 {
-            font-size: 65px;
+            font-size: 80px;
             padding: 20px;
+            margin-left: 250px;
+        }
+
+        .box h2 {
+            margin-left: 270px;
         }
 
         .quality {
@@ -101,7 +110,7 @@
             font-size: 26px;
             line-height: 1.2em;
             width: 90%;
-            color: #AA9C84;
+            color: #3a352d;
             display: block;
             -webkit-margin-before: 0.83em;
             -webkit-margin-after: 0.83em;
@@ -116,8 +125,9 @@
     </style>
 
     <div class="box">
+        <img src="/assets/images/intech_carre_tr.png" alt="" width="200px">
         <h1>Websql</h1>
-
+         <br/>
         <h2>Dynamic Web Site generation based on SQL Queries</h2>
     </div>
 
@@ -141,8 +151,8 @@
             You can also generate <strong>xml</strong> or <strong>json</strong> rendering by explicitly specifying the
             format.
             <pre><code><a href="/client/1" target="_blank">http://www.yoursite.com/client/1</a>
-                <a href="/client/1?format=xml" target="_blank">http://www.yoursite.com/client/1?format=xml</a>
-                <a href="/client/1?format=json" target="_blank">http://www.yoursite.com/client/1/?format=json</a></code></pre>
+<a href="/client/1?format=xml" target="_blank">http://www.yoursite.com/client/1?format=xml</a>
+<a href="/client/1?format=json" target="_blank">http://www.yoursite.com/client/1/?format=json</a></code></pre>
         </p>
         <p><a class="btn btn-primary" href="#">View details &raquo;</a></p>
     </div>
@@ -153,7 +163,7 @@
             You can change your site without any editor directly in the browser by clicking the edit site button.
         </p>
 
-        <p><a class="btn btn-primary" href="#">View details &raquo;</a></p>
+        <p><a class="btn btn-primary" href="/editSite">Edit demo site &raquo;</a></p>
     </div>
 
     <div class="quality">
