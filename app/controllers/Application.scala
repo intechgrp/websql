@@ -20,7 +20,7 @@ object Application extends Controller {
   private def page(id: String, param: Option[String], format: Option[String]) = Action {request=>
     val thePage = WebSite.getPage(id)
     thePage match {
-      case Some(p:Page) if p.secured && WebSite.authentication.isDefined && request.session.get("username").isEmpty =>
+      case Some(p:PageView) if p.secured && WebSite.authentication.isDefined && request.session.get("username").isEmpty =>
         Ok(views.html.authentication()).withSession("page"->id,"param"->param.getOrElse(""))
       case Some(p: Page) =>
         format match {
@@ -28,6 +28,7 @@ object Application extends Controller {
           case Some("xml") => Ok(p.xml(param)).as("text/xml")
           case Some("json") => Ok(p.json(param)).as("application/json")
           case Some(other) => NotAcceptable("Invalid format : " + other)
+          case _ => NotAcceptable("Invalid format")
         }
       case None => NotFound("**** Page " + id + " non trouvée ****÷\n" + WebSite.toString())
     }
@@ -89,6 +90,7 @@ object Application extends Controller {
             }
         }
       case None => NotFound("**** PageForm " + id + " non trouvée ****÷\n" + WebSite.toString())
+      case _ => NotAcceptable("**** Invalid request : "+request.toString()+" ****")
     }
   }
 

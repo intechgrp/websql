@@ -12,14 +12,13 @@ import play.api.templates.Html
  * To change this template use File | Settings | File Templates.
  */
 
-sealed class Page(val id: String, val secured:Boolean=false){
-  def withAuthentication:Page=new Page(id, true)
+sealed class Page(val id: String){
   def html(param:Option[String], username:Option[String])=Html("")
   def xml(param:Option[String])=""
   def json(param:Option[String])=""
 }
 
-case class PageView(pId:String, query: Option[String], template: (SqlStmt, Option[(String, String)], Option[String]) => play.api.templates.Html, detail: Option[(String, String)] = None, titles: Option[List[String]] = None) extends Page(pId,false) {
+case class PageView(pId:String, query: Option[String], template: (SqlStmt, Option[(String, String)], Option[String]) => play.api.templates.Html, detail: Option[(String, String)] = None, titles: Option[List[String]] = None, secured:Boolean=false) extends Page(pId) {
 
   def fromQuery(theQuery: String) = PageView(id, Some(theQuery), template, detail, titles)
 
@@ -28,6 +27,8 @@ case class PageView(pId:String, query: Option[String], template: (SqlStmt, Optio
   def withDetailPage(theId: String, theDetail: String) = PageView(id, query, template, Some(theId, theDetail), titles)
 
   def withTitles(theTitles: List[String]) = PageView(id, query, template, detail, Some(theTitles))
+
+  def withAuthentication:Page=copy(secured=true)
 
   override def html(param: Option[String], username:Option[String]) = {
     template(SqlStmt.runSelect(query.get, param, titles, username), detail,username)
@@ -53,7 +54,7 @@ case class PageView(pId:String, query: Option[String], template: (SqlStmt, Optio
   }
 }
 
-case class PageForm(pId:String, query:Option[String], form:Option[Form], template: (PageForm, Option[String])=> play.api.templates.Html, resultPage:Option[String]=None) extends Page(pId,false){
+case class PageForm(pId:String, query:Option[String], form:Option[Form], template: (PageForm, Option[String])=> play.api.templates.Html, resultPage:Option[String]=None) extends Page(pId){
   def withForm(form:Form)=copy(form=Some(form))
   def fromQuery(query:String)=copy(query=Some(query))
   override def html(param: Option[String], username:Option[String]) = template(this,username)
