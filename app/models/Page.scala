@@ -9,7 +9,7 @@ package models
  * To change this template use File | Settings | File Templates.
  */
 
-case class Page(id: String, query: Option[String], template: (SqlStmt, Option[(String, String)], Option[String]) => play.api.templates.Html, detail: Option[(String, String)] = None, titles: Option[List[String]] = None, secured:Boolean=false) {
+case class Page(id: String, query: Option[String], template: (SqlStmt, Option[(String, String)], Option[String]) => play.api.templates.Html, detail: Option[(String, String)] = None, titles: Option[List[String]] = None, secured: Boolean = false) {
 
   def fromQuery(theQuery: String) = Page(id, Some(theQuery), template, detail, titles)
 
@@ -19,7 +19,7 @@ case class Page(id: String, query: Option[String], template: (SqlStmt, Option[(S
 
   def withTitles(theTitles: List[String]) = Page(id, query, template, detail, Some(theTitles))
 
-  def withAuthentication:Page=this.copy(secured=true)
+  def withAuthentication: Page = this.copy(secured = true)
 
   def html(param: Option[String], username:Option[String], parameters:List[(String,String)]) = {
     template(SqlStmt.runSelect(query.get, param, titles, username,parameters), detail,username)
@@ -28,7 +28,7 @@ case class Page(id: String, query: Option[String], template: (SqlStmt, Option[(S
   def xml(param: Option[String]) = {
     val result = SqlStmt.runSelect(query.get, param, titles, None,List())
     "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" +
-    "<" + id + ">" +
+      "<" + id + ">" +
       result.getResult().map(row => "<item>" +
         row.map(el => "<" + el._1.replace(' ', '_') + ">" + el._2 + "</" + el._1.replace(' ', '_') + ">").mkString + "</item>"
       ).mkString +

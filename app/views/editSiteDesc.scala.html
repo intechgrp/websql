@@ -23,25 +23,28 @@
 
     </head>
     <body>
-            <div class="navbar navbar-fixed-top">
-            <div class="navbar-inner">
-            <div class="container">
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            </a>
-            <a class="brand" href="/">Websql</a>
-            <div class="nav-collapse">
-                <a class="btn btn-primary pull-right" href="/">Return to site</a>
-            </div><!--/.nav-collapse -->
-            </div>
-            </div>
-            </div>
+    <style>
+        body {
+            padding-top: 0;
+        }
 
+        h1 {
+            margin: 0;
+            background: #3735a3;
+            padding: 20px 45px;
+            padding-left: 120px;
+            color: white;
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, .3);
+            border-bottom: 1px solid #040269;
+            font-size: 28px;
+            display: block;
+        }
+
+    </style>
+    <h1>Edit site description</h1>
+    <br/><br/>
     <div class="container">
-
-                <p><a class="btn btn-success" onClick=saveSite()>Save source</a></p>
+                <p><a class="btn btn-primary" onClick=saveSite()>Save source</a></p>
                 <style type="text/css" media="screen">
                     #editor {
                         position: relative;

@@ -12,8 +12,8 @@ object Global extends GlobalSettings {
     if (SqlStmt.runSelect("Select * from client").values() isEmpty)
       DB.withConnection {
         implicit c =>
-          SQL("insert into Client(nom, prenom, adresse) values ({nom}, {prenom}, {adresse})")
-            .on("nom" -> "CROISEAUX", "prenom" -> "Fabrice", "adresse" -> "12 rue Claude Monet").executeInsert()
+          SQL("insert into Client(nom, prenom, adresse, login) values ({nom}, {prenom}, {adresse}, {login})")
+            .on("nom" -> "CROISEAUX", "prenom" -> "Fabrice", "adresse" -> "12 rue Claude Monet", "login" -> "fcx").executeInsert()
           SQL("insert into Client(nom, prenom, adresse, login) values ({nom}, {prenom}, {adresse}, {login})")
             .on("nom" -> "DETANTE", "prenom" -> "Antoine", "adresse" -> "1 rue des Roses", "login"->"ade").executeInsert()
 
@@ -27,6 +27,9 @@ object Global extends GlobalSettings {
 
           SQL("insert into USER (LOGIN,PASSWORD,USERNAME) values ({login},{password},{name})")
             .on("login"->"ade", "password"->"adepassword", "name"->"Antoine").executeInsert()
+
+          SQL("insert into USER (LOGIN,PASSWORD,USERNAME) values ({login},{password},{name})")
+            .on("login"->"fcx", "password"->"password", "name"->"Fabrice").executeInsert()
       }
   }
 

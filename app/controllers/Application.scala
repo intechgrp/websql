@@ -10,11 +10,12 @@ import play.api.data.Forms._
 
 import play.api.Play.current
 import anorm._
+import website.SiteUtils
 
 object Application extends Controller {
 
   def index = Action {
-    Ok(views.html.index("Your new application is ready."))
+    Ok(views.html.index())
   }
 
   private def page(id: String, param: Option[String], format: Option[String]) = Action {request=>
@@ -29,9 +30,8 @@ object Application extends Controller {
           case Some("json") => Ok(p.json(param)).as("application/json")
           case _            => NotAcceptable("Invalid format : " + format.getOrElse("not set"))
         }
-      case None => NotFound("**** Page " + id + " non trouvée ****÷\n" + WebSite.toString())
+      case None => NotFound(views.html.error("page " + id + " not found"))
     }
-  }
 
   def page(id: String, param: String = null, format: String = null): Action[AnyContent] = page(id, param match {
     case null => None
@@ -50,27 +50,28 @@ object Application extends Controller {
     Redirect("/editSite")
   }
 
-  def login = Action{implicit request=>
-    Form(tuple(
+  def login = Action {
+    implicit request =>
+      Form(tuple(
         "username" -> text,
         "password" -> text
-    )).bindFromRequest.fold(
-      errors => BadRequest,
-      {folder =>
-        DB.withConnection {
-          implicit connection =>
-            SQL(WebSite.authentication.get)
-              .on("login"->folder._1,"password"->folder._2)
-              .apply().headOption match {
+      )).bindFromRequest.fold(
+      errors => BadRequest, {
+        folder =>
+          DB.withConnection {
+            implicit connection =>
+              SQL(WebSite.authentication.get)
+                .on("login" -> folder._1, "password" -> folder._2)
+                .apply().headOption match {
                 case None => Forbidden(views.html.authentication(Some("Incorrect username/password")))
                 case Some(row) =>
-                  Redirect("/"+request.session.get("page").getOrElse("")+request.session.get("param").filter(_.length()>0).map("/"+_).getOrElse(""))
-                    .withSession("username"->row.data(0).toString)
+                  Redirect("/" + request.session.get("page").getOrElse("") + request.session.get("param").filter(_.length() > 0).map("/" + _).getOrElse(""))
+                    .withSession("username" -> row.data(0).toString)
               }
-        }
+          }
       }
-    )
+      )
   }
 
-  def logout=Action(request=>Redirect(routes.Application.index()).withNewSession)
+  def logout = Action(request => Redirect(routes.Application.index()).withNewSession)
 }

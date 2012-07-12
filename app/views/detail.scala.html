@@ -4,12 +4,6 @@
 
 @main(WebSite.title, username) {
 
-<!-- Main hero unit for a primary marketing message or call to action -->
-<div class="hero-unit">
-    <h1>Websql</h1>
-</div>
-
-<!-- Example row of columns -->
 <form class="form-horizontal">
     <fieldset>
         @queryResult.getResult().head.map { field =>
