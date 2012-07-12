@@ -12,17 +12,23 @@ object SiteDesc {
   val mainMenu = Map[String, String](
     "Liste des Clients" -> "clients",
     "Liste des Comptes" -> "comptes",
+    "Rechercher un compte" -> "rechercheCompte?query=",
     "Mes comptes" -> "myAccounts"
   )
 
   val pages = List[Page](
     DetailPage("client") fromQuery "Select * from Client where id = {param}"
       withTitles List[String]("Identifiant", "Nom du gars", "Prénom", "Adresse", "Login"),
-    DetailPage("compte") fromQuery "Select * from Compte where id = {param}",  
+
+    DetailPage("compte") fromQuery "Select * from Compte where id = {param}",
+
     ListPage("clients") fromQuery "Select *  from Client"
       withDetailPage("CLIENT.ID", "client")
       withTitles List[String]("Identifiant", "Nom", "Prénom", "Adresse", "Login"),
+
     ListPage("comptes") fromQuery "Select * from Compte" withDetailPage("COMPTE.ID", "compte"),
+
+    TemplatePage("rechercheCompte",{views.html.rechercheCompte(_,_,_)}) fromQuery "Select * from Compte where IBAN like {query}",
 
     ListPage("myAccounts")
       fromQuery "Select COMPTE.IBAN,COMPTE.DESCRIPTION,COMPTE.SOLDE,COMPTE.DEVISE from COMPTE, CLIENT where COMPTE.CLIENT = CLIENT.ID and CLIENT.LOGIN = {username}"

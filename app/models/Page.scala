@@ -21,12 +21,12 @@ case class Page(id: String, query: Option[String], template: (SqlStmt, Option[(S
 
   def withAuthentication:Page=this.copy(secured=true)
 
-  def html(param: Option[String], username:Option[String]) = {
-    template(SqlStmt.runSelect(query.get, param, titles, username), detail,username)
+  def html(param: Option[String], username:Option[String], parameters:List[(String,String)]) = {
+    template(SqlStmt.runSelect(query.get, param, titles, username,parameters), detail,username)
   }
 
   def xml(param: Option[String]) = {
-    val result = SqlStmt.runSelect(query.get, param, titles, None)
+    val result = SqlStmt.runSelect(query.get, param, titles, None,List())
     "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" +
     "<" + id + ">" +
       result.getResult().map(row => "<item>" +
@@ -36,7 +36,7 @@ case class Page(id: String, query: Option[String], template: (SqlStmt, Option[(S
   }
 
   def json(param: Option[String]) = {
-    val result = SqlStmt.runSelect(query.get, param, titles, None)
+    val result = SqlStmt.runSelect(query.get, param, titles, None,List())
     "{\"" + id + "\":[" +
       result.getResult().map(row => "{" +
         row.map(el => "\"" + el._1 + "\":\"" + el._2 + "\"").mkString(",") + "}"

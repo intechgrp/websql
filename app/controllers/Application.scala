@@ -24,10 +24,10 @@ object Application extends Controller {
         Ok(views.html.authentication()).withSession("page"->id,"param"->param.getOrElse(""))
       case Some(p: Page) =>
         format match {
-          case Some("html") => Ok(p.html(param,request.session.get("username")))
-          case Some("xml") => Ok(p.xml(param)).as("text/xml")
+          case Some("html") => Ok(p.html(param,request.session.get("username"),request.queryString.toList.map(p=>(p._1,p._2(0)))))
+          case Some("xml")  => Ok(p.xml(param)).as("text/xml")
           case Some("json") => Ok(p.json(param)).as("application/json")
-          case Some(other) => NotAcceptable("Invalid format : " + other)
+          case _            => NotAcceptable("Invalid format : " + format.getOrElse("not set"))
         }
       case None => NotFound("**** Page " + id + " non trouvée ****÷\n" + WebSite.toString())
     }
