@@ -105,13 +105,18 @@ object Table {
       } +
       "</tr>"
 
-  private def tableCell(values: Map[String, Any], data: Any, link: Option[Link]) =
+  private def tableCell(values: Map[String, Any], data: Any, link: Option[Link]) = {
+    val dataValue = data match {
+      case Some(content) => content
+      case item => item
+    }
     "<td>" +
       link.map {
-        l => "<a href=\"/" + l.pageDest + "/" + values.get(l.columnId).getOrElse("") + "\">" + data + "</a>"
+        l => "<a href=\"/" + l.pageDest + "/" + values.get(l.columnId).getOrElse("") + "\">" + dataValue + "</a>"
       }
-        .getOrElse(data) +
+        .getOrElse(dataValue) +
       "</td>"
+  }
 
   private def endTable = "</table>"
 
