@@ -32,6 +32,7 @@ object Application extends Controller {
         }
       case None => NotFound(views.html.error("page " + id + " not found"))
     }
+  }
 
   def page(id: String, param: String = null, format: String = null): Action[AnyContent] = page(id, param match {
     case null => None
