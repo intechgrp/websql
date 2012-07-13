@@ -43,6 +43,13 @@ case class Page(id: String, query: Option[String], template: (SqlStmt, Option[(S
       ).mkString(",") +
       "]}"
   }
+
+  def csv(param: Option[String]) = {
+    val sep = ";"
+    val result = SqlStmt.runSelect(query.get, param, titles, None,List())
+    result.getTitles().mkString(sep) + "\n" +
+    result.values().map(_.mkString(sep)).mkString("\n")
+  }
 }
 
 object Page {

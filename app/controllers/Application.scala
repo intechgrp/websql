@@ -28,6 +28,7 @@ object Application extends Controller {
           case Some("html") => Ok(p.html(param,request.session.get("username"),request.queryString.toList.map(p=>(p._1,p._2(0)))))
           case Some("xml")  => Ok(p.xml(param)).as("text/xml")
           case Some("json") => Ok(p.json(param)).as("application/json")
+          case Some("csv") => Ok(p.csv(param)).as("text/csv")
           case _            => NotAcceptable("Invalid format : " + format.getOrElse("not set"))
         }
       case None => NotFound(views.html.error("page " + id + " not found"))
