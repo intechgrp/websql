@@ -18,14 +18,14 @@ object Application extends Controller {
     Ok(views.html.index())
   }
 
-  private def page(id: String, param: Option[String], format: Option[String]) = Action {request=>
+  private def page(id: String, param: Option[String], format: Option[String], query:List[(String,String)]):(RequestHeader=>Result) = {request=>
     val thePage = WebSite.getPage(id)
     thePage match {
       case Some(p:Page) if p.secured && WebSite.authentication.isDefined && request.session.get("username").isEmpty =>
         Ok(views.html.authentication()).withSession("page"->id,"param"->param.getOrElse(""))
       case Some(p: Page) =>
         format match {
-          case Some("html") => Ok(p.html(param,request.session.get("username"),request.queryString.toList.map(p=>(p._1,p._2(0)))))
+          case Some("html") => Ok(p.html(param,request.session.get("username"),query))
           case Some("xml")  => Ok(p.xml(param)).as("text/xml")
           case Some("json") => Ok(p.json(param)).as("application/json")
           case Some("csv") => Ok(p.csv(param)).as("text/csv")
@@ -35,13 +35,33 @@ object Application extends Controller {
     }
   }
 
-  def page(id: String, param: String = null, format: String = null): Action[AnyContent] = page(id, param match {
-    case null => None
-    case _ => Some(param)
-  }, format match {
-    case null => None
-    case _ => Some(format)
-  })
+  def getPage(id: String, param: String = null, format: String = null): Action[AnyContent] = Action{ request=> 
+    page(id, param match {
+      case null => None
+      case _ => Some(param)
+    }, format match {
+      case null => None
+      case _ => Some(format)
+    },request.queryString.toList.map(p=>(p._1,p._2(0))))(request)
+  }
+
+  def postPage(id:String, format:String) = Action{
+    request => 
+    val params=
+      request.body.asFormUrlEncoded match {
+        case Some(p) =>
+          p.toList.filter(_._2.size>0).map(v=>(v._1,v._2.head))
+        case None => List()
+      }
+    page(id, 
+      None,
+      format match {
+        case null=> None
+        case _ => Some(format)
+      },
+      params
+    )(request)
+  }
 
   def editSiteDesc = Action {
     Ok(views.html.editSiteDesc(website.SiteUtils.siteDescSource))

@@ -14,8 +14,10 @@ GET     /                           controllers.Application.index
 GET     /editSite                   controllers.Application.editSiteDesc
 GET     /saveSite                   controllers.Application.saveSiteDesc(source:String)
 
-GET     /:id                        controllers.Application.page(id, param = null, format:String ?="html")
-GET     /:id/:param                 controllers.Application.page(id, param, format:String ?="html")
+GET     /:id                        controllers.Application.getPage(id, param = null, format:String ?="html")
+GET     /:id/:param                 controllers.Application.getPage(id, param, format:String ?="html")
+
+POST	/:id  						controllers.Application.postPage(id, format:String ?="html")
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
