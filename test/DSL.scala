@@ -1,6 +1,7 @@
 import org.specs2.mutable._
 import models._
 import models.Page._
+import models.DSL._
 
 class DSL extends Specification {
 
@@ -23,12 +24,12 @@ class DSL extends Specification {
 
    "Create a page with simple query" in {
       val res = page("test") withQuery "select * from T"
-      res.queries.size must be equalTo(1)
+      res.defaultQuery must beSome
     }
 
     "Create a page with named query" in {
       val res = page("test") withQuery "list" -> "select * from T"
-      res.queries.size must be equalTo(1)
+      res.namedQueries.size must be equalTo(1)
     }
 
     "Create a page with multiples queries" in {
@@ -38,7 +39,8 @@ class DSL extends Specification {
           "test1" ->  "select * from T1" withQuery
           "test2" -> "select * from T2"
 
-      res.queries.size must be equalTo(3)
+      res.namedQueries.size must be equalTo(2)
+      res.defaultQuery must beSome
     }
 
     "Create a page with queries and titles" in {
@@ -48,8 +50,8 @@ class DSL extends Specification {
           "first" -> "select a,b from T" withColumn "a" -> "Col A" and "b" -> "Col B" withQuery
           "last" -> "select c from T" withColumn "c" -> "Col C"
       
-      res.queries.size must be equalTo(3)
-      res.queries(1).columns.size must be equalTo(2)
+      res.namedQueries.size must be equalTo(2)
+      res.namedQueries(0).columns.size must be equalTo(2)
     }
 
     "Create a page with parameters" in {
@@ -66,9 +68,9 @@ class DSL extends Specification {
         page("test") withQuery
           "select c from T" withColumn "a" -> "A" linkedTo "otherPage"
 
-      res.queries.size must be equalTo(1)
-      res.queries(0).columns.size must be equalTo(1)
-      res.queries(0).columns(0).link must beSome
+      res.defaultQuery must beSome
+      res.defaultQuery.get.columns.size must be equalTo(1)
+      res.defaultQuery.get.columns(0).link must beSome
     }
 
     "Create a page with a multiple links" in {
@@ -76,31 +78,31 @@ class DSL extends Specification {
         page("test") withQuery
           "select a,b,c,d from T" withColumn "a" -> "Title of A" linkedTo "otherPage" and "b" -> "Title of B" and "c" -> "Title of C" linkedTo "destPage" and "d" -> "Title of D"
 
-      res.queries.size must be equalTo(1)
-      res.queries(0).columns.size must be equalTo(4)
-      res.queries(0).columns(0).link must beSome
-      res.queries(0).columns(1).link must beNone
-      res.queries(0).columns(2).link must beSome
-      res.queries(0).columns(3).link must beNone
+      res.defaultQuery must beSome
+      res.defaultQuery.get.columns.size must be equalTo(4)
+      res.defaultQuery.get.columns(0).link must beSome
+      res.defaultQuery.get.columns(1).link must beNone
+      res.defaultQuery.get.columns(2).link must beSome
+      res.defaultQuery.get.columns(3).link must beNone
     }
 
     "Create a page with link with custom parameter name" in {
       val res =
         page("test") withQuery 
           "select a,b,c from T" withColumn "a" -> "Col A" linkedTo "aPage" and "b" -> "Col B" linkedTo "anotherPage" as "newParam" and "c" -> "Col C"
-      res.queries(0).columns(0).link must beSome
-      res.queries(0).columns(0).link.get.parameterName must beNone
-      res.queries(0).columns(1).link must beSome
-      res.queries(0).columns(1).link.get.parameterName must beSome
+      res.defaultQuery.get.columns(0).link must beSome
+      res.defaultQuery.get.columns(0).link.get.parameterName must beNone
+      res.defaultQuery.get.columns(1).link must beSome
+      res.defaultQuery.get.columns(1).link.get.parameterName must beSome
     }
 
     "Create a page with link with custom title" in {
       val res =
         page("test") withQuery 
           "select a,b,c from T" withColumn "a" -> "Col A" linkedTo "aPage" and "b" -> "Col B" linkedTo "anotherPage" named "newParam" and "c" -> "Col C"
-      res.queries(0).columns(0).link must beSome
-      res.queries(0).columns(0).link.get.title must beNone
-      res.queries(0).columns(1).link.get.title must beSome
+      res.defaultQuery.get.columns(0).link must beSome
+      res.defaultQuery.get.columns(0).link.get.title must beNone
+      res.defaultQuery.get.columns(1).link.get.title must beSome
     }
 
     "Put all things together" in {
@@ -114,7 +116,8 @@ class DSL extends Specification {
           "secondQuery" -> "select fName,lName,id from user where user = {user}" withColumn
             "fName" -> "First name" and "lName" -> "Last name" and "id" -> "Detail" linkedTo "detailPage" as "id" named "Detail"
 
-      res.queries.size must be equalTo(2)
+      res.defaultQuery must beSome
+      res.namedQueries.size must be equalTo(1)
       res.parameters.size must be equalTo(3)
     }
   }

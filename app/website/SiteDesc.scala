@@ -2,6 +2,7 @@ package website
 
 import models.Page
 import models.Page._
+import models.DSL._
 
 object SiteDesc {
 
@@ -33,7 +34,7 @@ object SiteDesc {
       
     page("clients") 
       withQuery "SELECT ID,NOM,PRENOM,ADDRESS,LOGIN FROM CLIENT" 
-      withColumn "ID" -> "Identifiant" linkedTo "client" 
+      withColumn "ID" -> "Identifiant" linkedTo "client" as "idClient"
         and "NOM" -> "Nom"
         and "PRENOM" -> "Prénom"
         and "ADDRESS" -> "Adresse"
@@ -41,7 +42,7 @@ object SiteDesc {
 
     page("comptes") 
       withQuery "SELECT ID,IBAN,DESCRIPTION,SOLDE,DEVISE,CLIENT FROM COMPTE" 
-      withColumn "ID" -> "Identifiant" linkedTo "compte"
+      withColumn "ID" -> "Identifiant" linkedTo "compte" as "idCompte"
       
     
     //TemplatePage("rechercheCompte",{views.html.rechercheCompte(_,_,_)}) fromQuery "Select * from Compte where IBAN like {query}",

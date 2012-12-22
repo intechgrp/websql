@@ -3,8 +3,30 @@ package models
 import play.api.db._
 
 import play.api.Play.current
-import scala.collection.Map
 import anorm._
+import scala.collection.Map
+
+case class QueryResult(query:Query, result:List[Map[String,Any]])
+
+case class PageResult(defaultQuery:Option[QueryResult], namedQueries:Map[String,QueryResult])
+
+object PageResult{
+  private def processQuery(query:Query, parameters:Seq[ParameterValue]):QueryResult = 
+    QueryResult(query,
+      DB.withConnection {
+        implicit connection =>
+          SQL(query.queryString).on(
+            parameters.map(p => p.name -> anorm.ParameterValue(p.value.getOrElse(""), ToStatement.anyParameter)) :_*
+          ).apply().map(_.asMap).toList
+      }
+    )
+
+  def processPageQueries(request:PageRequest):PageResult = 
+    PageResult(
+      request.page.defaultQuery.map(processQuery(_,request.parameters)),
+      request.page.namedQueries.map(q=>(q.name,processQuery(q,request.parameters))).toMap
+    )
+}
 
 case class SqlStmt(result: List[Map[String, Any]], titles: Option[List[String]]) {
   def columns(): List[String] = result match {
@@ -39,9 +61,9 @@ case class SqlStmt(result: List[Map[String, Any]], titles: Option[List[String]])
 object SqlStmt {
 
   def runSelect(stmt: String, param: Option[String], titles: Option[List[String]], username: Option[String], parameters: List[(String, String)]): SqlStmt = {
-    val queryResult = DB.withConnection {
+    /*val queryResult = DB.withConnection {
       implicit connection =>
-        SQL(stmt).on(
+        /SQL(stmt).on(
           (List(
             "param" -> param.getOrElse(""),
             "username" -> username.getOrElse("")
@@ -51,8 +73,8 @@ object SqlStmt {
             p => p._1 -> ParameterValue(p._2, ToStatement.anyParameter)
           }: _*
         ).apply().map(_.asMap).toList
-    }
-    SqlStmt(queryResult, titles)
+    }*/
+    SqlStmt(null, titles)
   }
 
   def runSelect(stmt: String): SqlStmt = runSelect(stmt, None, None, None, List())

@@ -34,7 +34,7 @@ object Global extends GlobalSettings {
   }
 
   override def onStart(app: Application) {
-    if (!isProd)
+    if (!isProd && !isTest)
       insertTestData() // Insert test data
   }
 
