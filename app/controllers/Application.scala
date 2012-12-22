@@ -21,8 +21,8 @@ object Application extends Controller {
   private def page(id: String, param: Option[String], format: Option[String], query:List[(String,String)]):(RequestHeader=>Result) = {request=>
     val thePage = WebSite.getPage(id)
     thePage match {
-      case Some(p:Page) if p.secured && WebSite.authentication.isDefined && request.session.get("username").isEmpty =>
-        Ok(views.html.authentication()).withSession("page"->id,"param"->param.getOrElse(""))
+      /*case Some(p:Page) if p.secured && WebSite.authentication.isDefined && request.session.get("username").isEmpty =>
+        Ok(views.html.authentication()).withSession("page"->id,"param"->param.getOrElse(""))*/
       case Some(p: Page) =>
         format match {
           case Some("html") => Ok(p.html(param,request.session.get("username"),query))

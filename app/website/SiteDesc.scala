@@ -17,23 +17,39 @@ object SiteDesc {
   )
 
   val pages = List[Page](
-    DetailPage("client") fromQuery "Select * from Client where id = {param}"
-      withTitles List[String]("Identifiant", "Nom du gars", "Prénom", "Adresse", "Login"),
 
-    DetailPage("compte") fromQuery "Select * from Compte where id = {param}",
+    page("client") 
+      withParameter url("idClient") 
+      withQuery "SELECT ID,NOM,PRENOM,ADDRESS,LOGIN FROM CLIENT WHERE ID = {idClient}" 
+      withColumn "ID" -> "Identifiant" 
+        and "NOM" -> "Nom" 
+        and "PRENOM" -> "Prénom" 
+        and "ADDRESS" -> "Address" 
+        and "LOGIN" -> "Login",
 
-    ListPage("clients") fromQuery "Select *  from Client"
-      withDetailPage("CLIENT.ID", "client")
-      withTitles List[String]("Identifiant", "Nom", "Prénom", "Adresse", "Login"),
+    page("compte") 
+      withParameter url("idCompte")
+      withQuery "SELECT ID,IBAN,DESCRIPTION,SOLDE,DEVISE,CLIENT FROM COMPTE WHERE ID = {idCompte}",
+      
+    page("clients") 
+      withQuery "SELECT ID,NOM,PRENOM,ADDRESS,LOGIN FROM CLIENT" 
+      withColumn "ID" -> "Identifiant" linkedTo "client" 
+        and "NOM" -> "Nom"
+        and "PRENOM" -> "Prénom"
+        and "ADDRESS" -> "Adresse"
+        and "LOGIN" -> "Login",
 
-    ListPage("comptes") fromQuery "Select * from Compte" withDetailPage("COMPTE.ID", "compte"),
+    page("comptes") 
+      withQuery "SELECT ID,IBAN,DESCRIPTION,SOLDE,DEVISE,CLIENT FROM COMPTE" 
+      withColumn "ID" -> "Identifiant" linkedTo "compte"
+      
+    
+    //TemplatePage("rechercheCompte",{views.html.rechercheCompte(_,_,_)}) fromQuery "Select * from Compte where IBAN like {query}",
 
-    TemplatePage("rechercheCompte",{views.html.rechercheCompte(_,_,_)}) fromQuery "Select * from Compte where IBAN like {query}",
-
-    ListPage("myAccounts")
+    /*ListPage("myAccounts")
       fromQuery "Select COMPTE.IBAN,COMPTE.DESCRIPTION,COMPTE.SOLDE,COMPTE.DEVISE from COMPTE, CLIENT where COMPTE.CLIENT = CLIENT.ID and CLIENT.LOGIN = {username}"
       withTitles List[String]("IBAN","Description","Solde","Devise")
-      withAuthentication
+      withAuthentication*/
   )
 
 }
