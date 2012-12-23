@@ -5,10 +5,7 @@ import scala.collection.Map
 import play.api.templates.Html
 
 /**
- * Created with IntelliJ IDEA.
- * User: antoine
- * Date: 01/06/12
- * Time: 10:43
+ * TODO : Html helpers must be rewritten
  */
 
 object Table {

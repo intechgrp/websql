@@ -1,4 +1,6 @@
 package models
+import models.Template._
+import play.api.templates._
 
 case class Column(queryCol:String, title:String, link:Option[Link]=None)
 
@@ -21,12 +23,15 @@ case class GetParameter(name:String) extends Parameter
 
 case class Page(
     id:String,
+
     defaultQuery:Option[SimpleQuery],
     namedQueries:Seq[NamedQuery]=Seq[NamedQuery](),
-    parameters:Seq[Parameter]=Seq()
-){
-  def html(param: Option[String], username:Option[String], parameters:List[(String,String)]) = ???
-  def xml(param: Option[String]) = ???
-  def json(param: Option[String]) = ???
-  def csv(param: Option[String]) = ???
-}
+
+    parameters:Seq[Parameter]=Seq(),
+    secured:Boolean=false,
+    
+    html:Template[Html]=defaultHtmlListTemplate,
+    xml:Template[Xml]=defaultXmlTemplate,
+    csv:Template[Txt]=defaultCsvTemplate,
+    json:Template[Txt]=defaultJsonTemplate
+)

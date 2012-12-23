@@ -1,8 +1,11 @@
 package models
 
+import models.Template._
+
 object DSL{
 
-  def page(id:String) = new Page(id,None)
+  def listPage(id:String) = new Page(id,None, html = defaultHtmlListTemplate)
+  def detailPage(id:String) = new Page(id,None, html = defaultHtmlDetailTemplate)
 
   implicit class PageWithQueryOp(val page:Page) extends AnyVal{
     def withQuery(query: SimpleQuery) = new PageSimpleQueryOp(page,query)
@@ -11,6 +14,8 @@ object DSL{
     def and(newQuery:NamedQuery) = new PageNamedQueryOp(page,newQuery)
     def withParameter(parameter:Parameter) = page.copy(parameters = page.parameters :+ parameter)
     def and(parameter:Parameter) = page.copy(parameters = page.parameters :+ parameter)  
+    // TODO : must be upgraded
+    def withAuthentication = new PageWithQueryOp(page.copy(secured=true))
   }
 
   private[DSL] class PageNamedQueryOp(val page:Page, val query:NamedQuery) {

@@ -41,7 +41,7 @@ case class QueryResult(query:Query, result:List[Map[String,Any]]){
 
 }
 
-case class PageResult(defaultQuery:Option[QueryResult], namedQueries:Map[String,QueryResult])
+case class PageResult(page:Page, defaultQuery:Option[QueryResult], namedQueries:Map[String,QueryResult])
 
 object PageResult{
   private def processQuery(query:Query, parameters:Seq[ParameterValue]):QueryResult = {
@@ -57,14 +57,9 @@ object PageResult{
 
   def processPageQueries(request:PageRequest):PageResult = 
     PageResult(
+      request.page,
       request.page.defaultQuery.map(processQuery(_,request.parameters)),
       request.page.namedQueries.map(q=>(q.name,processQuery(q,request.parameters))).toMap
     )
 
-  def linkToHtml(link:Link,col:(String,String)) = 
-    """<a href="%s?%s">%s</a>""".format(
-        link.toPage,
-        link.parameterName.getOrElse(col._1)+"="+col._2,
-        link.title.getOrElse(col._2)
-      )
 }

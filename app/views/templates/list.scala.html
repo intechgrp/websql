@@ -1,8 +1,10 @@
 @(pageResult:PageResult)
 
 @import website.Site._
+@import views.helpers.Helpers._
 
-@main(WebSite.title, Some("TODO")) {
+@** TODO : pass username in PageResult **@
+@main(WebSite.title, Some("User")) {
 
 	<table class="table table-bordered">
 		<thead>
@@ -19,7 +21,7 @@
 				<td>
 				@col._3 match{
 					case Some(link) => {
-						@Html(PageResult.linkToHtml(link,(col._1,col._2)))
+						@showLink(link,(col._1,col._2))
 					}
 					case _ => {
 						@col._2

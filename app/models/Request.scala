@@ -32,6 +32,13 @@ object PageRequest{
   def fold(page:Page, request:Request[AnyContent]) = PageRequest(
     page,
     ParameterValue.fromRequest(page.parameters,request)
+    ++ (
+    // If page request authentication, add the username parameter from request session
+        if(page.secured)
+          List(ParameterValue("username",request.session.get("username")))
+        else 
+          List()
+    )
   )
 
 }

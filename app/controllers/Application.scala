@@ -11,6 +11,7 @@ import play.api.data.Forms._
 import play.api.Play.current
 import anorm._
 import website.SiteUtils
+import play.api.templates._
 
 object Application extends Controller {
 
@@ -18,56 +19,30 @@ object Application extends Controller {
     Ok(views.html.index())
   }
 
-  private def page(id: String, param: Option[String], format: Option[String], query:List[(String,String)]):(Request[AnyContent]=>Result) = {request=>
-    val thePage = WebSite.getPage(id)
-    thePage match {
-      /*case Some(p:Page) if p.secured && WebSite.authentication.isDefined && request.session.get("username").isEmpty =>
-        Ok(views.html.authentication()).withSession("page"->id,"param"->param.getOrElse(""))*/
-      case Some(p: Page) =>
+  def getPage(id: String, format: String = null)=page(id,format)
+  def postPage(id: String, format: String = null)=page(id,format)
+
+  private def page(id: String, format: String = null)= Action{ request=> 
+    WebSite.getPage(id) match {
+
+      // Authentication required for this page, and not use in session : redirect to login page
+      case Some(page:Page) if page.secured && WebSite.authentication.isDefined && request.session.get("username").isEmpty =>
+        Ok(views.html.authentication()).withSession("page"->id)
+
+      // Render the page according to requested format
+      case Some(page:Page) =>
+        val pageResult = PageResult.processPageQueries(PageRequest.fold(page,request))
         format match {
-          case Some("html") => 
-            val pageResult = PageResult.processPageQueries(
-                PageRequest.fold(
-                  p,
-                  request
-                )
-            )
-            Ok(views.html.detail(pageResult))
-          case Some("xml")  => Ok("TODO")
-          case Some("json") => Ok("TODO")
-          case Some("csv") => Ok("TODO")
-          case _            => NotAcceptable("Invalid format : " + format.getOrElse("not set"))
+          case "xml"  => Ok(page.xml(pageResult))
+          case "csv"  => Ok(page.csv(pageResult))
+          case "json" => Ok(page.json(pageResult))
+          case _      => Ok(page.html(pageResult))
         }
-      case None => NotFound(views.html.error("page " + id + " not found"))
+
+      // Page id not found
+      case _ => 
+        NotFound(views.html.error("page " + id + " not found"))
     }
-  }
-
-  def getPage(id: String, param: String = null, format: String = null): Action[AnyContent] = Action{ request=> 
-    page(id, param match {
-      case null => None
-      case _ => Some(param)
-    }, format match {
-      case null => None
-      case _ => Some(format)
-    },request.queryString.toList.map(p=>(p._1,p._2(0))))(request)
-  }
-
-  def postPage(id:String, format:String) = Action{
-    request => 
-    val params=
-      request.body.asFormUrlEncoded match {
-        case Some(p) =>
-          p.toList.filter(_._2.size>0).map(v=>(v._1,v._2.head))
-        case None => List()
-      }
-    page(id, 
-      None,
-      format match {
-        case null=> None
-        case _ => Some(format)
-      },
-      params
-    )(request)
   }
 
   def editSiteDesc = Action {
@@ -94,7 +69,7 @@ object Application extends Controller {
                 .apply().headOption match {
                 case None => Forbidden(views.html.authentication(Some("Incorrect username/password")))
                 case Some(row) =>
-                  Redirect("/" + request.session.get("page").getOrElse("") + request.session.get("param").filter(_.length() > 0).map("/" + _).getOrElse(""))
+                  Redirect("/" + request.session.get("page").getOrElse(""))
                     .withSession("username" -> row.data(0).toString)
               }
           }
