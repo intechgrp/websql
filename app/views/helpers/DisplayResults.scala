@@ -1,6 +1,5 @@
 package views.helpers
 
-import models.SqlStmt
 import util.parsing.combinator.RegexParsers
 import scala.collection.Map
 import play.api.templates.Html
@@ -14,7 +13,7 @@ import play.api.templates.Html
 
 object Table {
 
-  import Parsers._
+  /*import Parsers._
 
   private case class Column(header: String, name: String)
 
@@ -175,7 +174,7 @@ object Table {
 
     def parseLinks(str: String) = LinksParser.parse(LinksParser.links, str)
 
-  }
+  }*/
 
 }
 

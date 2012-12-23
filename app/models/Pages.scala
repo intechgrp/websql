@@ -25,8 +25,8 @@ case class Page(
     namedQueries:Seq[NamedQuery]=Seq[NamedQuery](),
     parameters:Seq[Parameter]=Seq()
 ){
-  def html(param: Option[String], username:Option[String], parameters:List[(String,String)]) = "TODO"
-  def xml(param: Option[String]) = "TODO"
-  def json(param: Option[String]) = "TODO"
-  def csv(param: Option[String]) = "TODO"
+  def html(param: Option[String], username:Option[String], parameters:List[(String,String)]) = ???
+  def xml(param: Option[String]) = ???
+  def json(param: Option[String]) = ???
+  def csv(param: Option[String]) = ???
 }

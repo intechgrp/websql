@@ -18,17 +18,24 @@ object Application extends Controller {
     Ok(views.html.index())
   }
 
-  private def page(id: String, param: Option[String], format: Option[String], query:List[(String,String)]):(RequestHeader=>Result) = {request=>
+  private def page(id: String, param: Option[String], format: Option[String], query:List[(String,String)]):(Request[AnyContent]=>Result) = {request=>
     val thePage = WebSite.getPage(id)
     thePage match {
       /*case Some(p:Page) if p.secured && WebSite.authentication.isDefined && request.session.get("username").isEmpty =>
         Ok(views.html.authentication()).withSession("page"->id,"param"->param.getOrElse(""))*/
       case Some(p: Page) =>
         format match {
-          case Some("html") => Ok(p.html(param,request.session.get("username"),query))
-          case Some("xml")  => Ok(p.xml(param)).as("text/xml")
-          case Some("json") => Ok(p.json(param)).as("application/json")
-          case Some("csv") => Ok(p.csv(param)).as("text/csv")
+          case Some("html") => 
+            val pageResult = PageResult.processPageQueries(
+                PageRequest.fold(
+                  p,
+                  request
+                )
+            )
+            Ok(views.html.detail(pageResult))
+          case Some("xml")  => Ok("TODO")
+          case Some("json") => Ok("TODO")
+          case Some("csv") => Ok("TODO")
           case _            => NotAcceptable("Invalid format : " + format.getOrElse("not set"))
         }
       case None => NotFound(views.html.error("page " + id + " not found"))

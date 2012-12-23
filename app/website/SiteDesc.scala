@@ -21,28 +21,31 @@ object SiteDesc {
 
     page("client") 
       withParameter url("idClient") 
-      withQuery "SELECT ID,NOM,PRENOM,ADDRESS,LOGIN FROM CLIENT WHERE ID = {idClient}" 
-      withColumn "ID" -> "Identifiant" 
-        and "NOM" -> "Nom" 
-        and "PRENOM" -> "Prénom" 
-        and "ADDRESS" -> "Address" 
-        and "LOGIN" -> "Login",
+      withQuery "SELECT ID,NOM,PRENOM,ADRESSE,LOGIN FROM CLIENT WHERE ID = {idClient}" 
+      withColumn 
+        "CLIENT.ID" -> "Identifiant" 
+        and "CLIENT.NOM" -> "Nom" 
+        and "CLIENT.PRENOM" -> "Prénom" 
+        and "CLIENT.ADRESSE" -> "Address" 
+        and "CLIENT.LOGIN" -> "Login",
 
     page("compte") 
       withParameter url("idCompte")
       withQuery "SELECT ID,IBAN,DESCRIPTION,SOLDE,DEVISE,CLIENT FROM COMPTE WHERE ID = {idCompte}",
       
     page("clients") 
-      withQuery "SELECT ID,NOM,PRENOM,ADDRESS,LOGIN FROM CLIENT" 
-      withColumn "ID" -> "Identifiant" linkedTo "client" as "idClient"
-        and "NOM" -> "Nom"
-        and "PRENOM" -> "Prénom"
-        and "ADDRESS" -> "Adresse"
-        and "LOGIN" -> "Login",
+      withQuery "SELECT ID,NOM,PRENOM,ADRESSE,LOGIN FROM CLIENT" 
+      withColumn 
+        "CLIENT.ID" -> "Identifiant" linkedTo "client" as "idClient" named "Afficher le détail"
+        and "CLIENT.NOM" -> "Nom"
+        and "CLIENT.PRENOM" -> "Prénom"
+        and "CLIENT.ADRESSE" -> "Adresse"
+        and "CLIENT.LOGIN" -> "Login",
 
     page("comptes") 
       withQuery "SELECT ID,IBAN,DESCRIPTION,SOLDE,DEVISE,CLIENT FROM COMPTE" 
-      withColumn "ID" -> "Identifiant" linkedTo "compte" as "idCompte"
+      withColumn 
+        "COMPTE.ID" -> "Identifiant" linkedTo "compte" as "idCompte"
       
     
     //TemplatePage("rechercheCompte",{views.html.rechercheCompte(_,_,_)}) fromQuery "Select * from Compte where IBAN like {query}",
