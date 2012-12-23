@@ -65,9 +65,13 @@ object SiteDesc {
             "COMPTE.IBAN"     -> "IBAN"
         and "COMPTE.DESCRIPTION" -> "Description"
         and "COMPTE.SOLDE"    -> "Solde"
-        and "COMPTE.DEVISE"   -> "Devise"
+        and "COMPTE.DEVISE"   -> "Devise",
 
-    //TemplatePage("rechercheCompte",{views.html.rechercheCompte(_,_,_)}) fromQuery "Select * from Compte where IBAN like {query}",
+
+    /* Custom form-based (POST) search page */
+    customPage("rechercheCompte",views.html.rechercheCompte.apply _)
+      withParameter form("query")
+      withQuery "select * from Compte where IBAN like {query}"      
 
   )
 

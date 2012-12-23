@@ -1,11 +1,13 @@
 package models
 
 import models.Template._
+import play.api.templates._
 
 object DSL{
 
   def listPage(id:String) = new Page(id,None, html = defaultHtmlListTemplate)
   def detailPage(id:String) = new Page(id,None, html = defaultHtmlDetailTemplate)
+  def customPage(id:String,template:Template[Html]) = new Page(id,None,html=template)
 
   implicit class PageWithQueryOp(val page:Page) extends AnyVal{
     def withQuery(query: SimpleQuery) = new PageSimpleQueryOp(page,query)
