@@ -8,7 +8,7 @@
 
 <form class="well form-search" method="POST" action="/rechercheCompte">
     Enter an IBAN:
-    <input type="text" class="input-medium search-query" name="query">
+    <input type="text" class="input-medium search-query" name="query" value="@pageResult.parameter("query")"/>
     <button type="submit" class="btn">Search</button><br/>
     <span style="font-style: italic; font-size: small; ">For example: 1123-984702</span>
 </form>

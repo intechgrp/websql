@@ -41,7 +41,12 @@ case class QueryResult(query:Query, result:List[Map[String,Any]]){
 
 }
 
-case class PageResult(page:Page, defaultQuery:Option[QueryResult], namedQueries:Map[String,QueryResult])
+case class PageResult(page:Page, defaultQuery:Option[QueryResult], namedQueries:Map[String,QueryResult], parameters:Seq[ParameterValue]){
+  private val parameterMap = parameters.collect{
+    case ParameterValue(pName,Some(pValue)) => (pName,pValue)
+  }.toMap
+  def parameter(pName:String):String = parameterMap.get(pName).getOrElse("")
+}
 
 object PageResult{
   private def processQuery(query:Query, parameters:Seq[ParameterValue]):QueryResult = {
@@ -59,7 +64,8 @@ object PageResult{
     PageResult(
       request.page,
       request.page.defaultQuery.map(processQuery(_,request.parameters)),
-      request.page.namedQueries.map(q=>(q.name,processQuery(q,request.parameters))).toMap
+      request.page.namedQueries.map(q=>(q.name,processQuery(q,request.parameters))).toMap,
+      request.parameters
     )
 
 }
