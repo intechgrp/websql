@@ -1,36 +1,10 @@
 @(pageResult:PageResult)
 
 @import website.Site._
-@import views.helpers.Helpers._
 
 @** TODO : pass username in PageResult **@
 @main(WebSite.title, Some("User")) {
 
-	<table class="table table-bordered">
-		<thead>
-			<tr>
-			@for(title <- pageResult.defaultQuery.get.titles){
-				<td>@title._2</td>
-			}
-			</tr>
-		</thead>
-		<tbody>
-		@for(line <- pageResult.defaultQuery.get.data){
-			<tr>
-			@for(col <- line){
-				<td>
-				@col._3 match{
-					case Some(link) => {
-						@showLink(link,(col._1,col._2))
-					}
-					case _ => {
-						@col._2
-					}
-				}
-				</td>
-			}
-		}
-		</tbody>
-	</table>
+	@table(pageResult.defaultQuery)
 
 }
