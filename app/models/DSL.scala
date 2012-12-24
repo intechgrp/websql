@@ -17,7 +17,7 @@ object DSL{
     def withParameter(parameter:Parameter) = page.copy(parameters = page.parameters :+ parameter)
     def and(parameter:Parameter) = page.copy(parameters = page.parameters :+ parameter)  
     // TODO : must be upgraded
-    def withAuthentication = new PageWithQueryOp(page.copy(secured=true))
+    def withAuthentication = page.copy(secured=true)
   }
 
   private[DSL] class PageNamedQueryOp(val page:Page, val query:NamedQuery) {

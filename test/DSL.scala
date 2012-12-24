@@ -12,7 +12,8 @@ class DSL extends Specification {
     }
 
     "Create a secured page" in {
-      (detailPage("test") withAuthentication).secured must be equalTo(true)
+      val page:Page=detailPage("test").withAuthentication
+      page.secured must be equalTo(true)
     }
 
     "Create a Simple Query" in {
