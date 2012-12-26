@@ -24,7 +24,7 @@ CREATE TABLE USER(
     LOGIN               VARCHAR(50) NOT NULL PRIMARY KEY,
     PASSWORD            VARCHAR(50) NOT NULL,
     USERNAME            VARCHAR(100) NOT NULL DEFAULT ''
-)
+);
 
 # --- !Downs
 

@@ -8,6 +8,10 @@ import slick.jdbc.{StaticQuery => Q, SetParameter, GetResult}
 import scala.Predef._
 import play.api.Logger
 import scala.Some
+import models.Page
+import scala.Some
+import models.QueryResult
+import models.Link
 
 
 case class QueryResult(query: Query, result: List[Map[String, Any]]) {
@@ -63,12 +67,8 @@ object PageResult {
 
   private def convertPositionnedResult(r: PositionedResult): Map[String, Any] = {
     val m = mutable.MutableList[(String, Any)]()
-    var colCount: Int = 1
-    while (r.hasMoreColumns) {
-      m.+=(r.rs.getMetaData.getColumnName(colCount) -> r.nextObject())
-      colCount += 1
-    }
-    Logger.debug(m.toList.toMap.toString)
+    while (r.hasMoreColumns)
+      m.+=(r.rs.getMetaData.getColumnName(r.currentPos+1) -> r.nextObject())
     m.toMap
   }
 

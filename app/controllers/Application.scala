@@ -89,13 +89,18 @@ object Application extends Controller {
 
   private def convertPositionnedResult(r: PositionedResult): Map[String, Any] = {
     val m = mutable.MutableList[(String, Any)]()
-    var colCount: Int = 1
-    while (r.hasMoreColumns) {
-      m.+=(r.rs.getMetaData.getColumnName(colCount) -> r.nextObject())
-      colCount += 1
-    }
-    Logger.debug(m.toList.toMap.toString)
+    while (r.hasMoreColumns)
+      m.+=(r.rs.getMetaData.getColumnName(r.currentPos+1) -> r.nextObject())
     m.toMap
+  }
+
+  def test = Action {
+    val l = Database.forURL("jdbc:h2:mem:websql", driver = "org.h2.Driver") withSession {
+      //      val quer = Q[(String, String), Map[String, Any]] + "select * from Client where nom like ? and login = ?"
+      val quer = Q[List[String],Map[String,Any]] +  "select * from Client where nom like ? and login = ?"
+      quer(List("CROIS%", "fcx")).list
+    }
+    Ok(l.mkString("\r"))
   }
 
 }
