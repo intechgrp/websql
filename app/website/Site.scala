@@ -1,13 +1,14 @@
 package website
 
 import models.Page
-import models.Page._
 import collection.mutable.MutableList
 
 
 case class Site(title:String, authentication:Option[String]=None) {
   val pages: MutableList[Page] = MutableList[Page]()
   var menu: Map[String, String] = Map[String, String]()
+  var dbUrl:String = ""
+  var dbDriver:String = ""
 
   def addPage(p: Page) = {
     pages += p
@@ -28,7 +29,8 @@ object Site {
   {
     WebSite.addPages(SiteDesc.pages)
     WebSite.menu = SiteDesc.mainMenu
+    WebSite.dbUrl = SiteDesc.dbUrl
+    WebSite.dbDriver = SiteDesc.dbDriver
   }
-
 
 }

@@ -8,6 +8,9 @@ object SiteDesc {
 
   val title = "POC WebSql"
 
+  val dbUrl = "jdbc:h2:mem:websql"
+  val dbDriver = "org.h2.Driver"
+
   val authentication="select LOGIN from USER where LOGIN = ? and PASSWORD = ?"
 
   val mainMenu = Map[String, String](

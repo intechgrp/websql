@@ -7,13 +7,11 @@ import models._
 import website.Site._
 import play.api.data.Forms._
 
-import play.api.Play.current
-import website.SiteUtils
-import play.api.templates._
 import slick.session.{PositionedResult, Database}
 import Database.threadLocalSession
 import slick.jdbc.{StaticQuery => Q, SetParameter, GetResult}
 import collection.mutable
+
 
 object Application extends Controller {
 
@@ -66,7 +64,7 @@ object Application extends Controller {
       )).bindFromRequest.fold(
       errors => BadRequest, {
         folder =>
-          Database.forURL("jdbc:h2:mem:websql", driver = "org.h2.Driver") withSession {
+          Database.forURL(WebSite.dbUrl, driver = WebSite.dbDriver) withSession {
             Q.query(WebSite.authentication.get)
               .list(List(folder._1, folder._2))
               .headOption match {
@@ -85,22 +83,13 @@ object Application extends Controller {
 
   implicit val getQResult = GetResult(r => convertPositionnedResult(r))
 
-  implicit val setQParam = SetParameter((s:List[String],p) => s.map(str => p.setString(str)))
+  implicit val setQParam = SetParameter((s: List[String], p) => s.map(str => p.setString(str)))
 
   private def convertPositionnedResult(r: PositionedResult): Map[String, Any] = {
     val m = mutable.MutableList[(String, Any)]()
     while (r.hasMoreColumns)
-      m.+=(r.rs.getMetaData.getColumnName(r.currentPos+1) -> r.nextObject())
+      m.+=(r.rs.getMetaData.getColumnName(r.currentPos + 1) -> r.nextObject())
     m.toMap
-  }
-
-  def test = Action {
-    val l = Database.forURL("jdbc:h2:mem:websql", driver = "org.h2.Driver") withSession {
-      //      val quer = Q[(String, String), Map[String, Any]] + "select * from Client where nom like ? and login = ?"
-      val quer = Q[List[String],Map[String,Any]] +  "select * from Client where nom like ? and login = ?"
-      quer(List("CROIS%", "fcx")).list
-    }
-    Ok(l.mkString("\r"))
   }
 
 }

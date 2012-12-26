@@ -6,12 +6,9 @@ import slick.session.{PositionedParameters, PositionedResult, Database}
 import Database.threadLocalSession
 import slick.jdbc.{StaticQuery => Q, SetParameter, GetResult}
 import scala.Predef._
-import play.api.Logger
+import website.Site._
 import scala.Some
-import models.Page
-import scala.Some
-import models.QueryResult
-import models.Link
+
 
 
 case class QueryResult(query: Query, result: List[Map[String, Any]]) {
@@ -73,11 +70,12 @@ object PageResult {
   }
 
   private def processQuery(query: Query, parameters: Seq[ParameterValue]): QueryResult = {
-    //Replace {nomvar} by ? int he query and build a list of ordered parameter names
+    // Replace {nomvar} by ? in the query
     val parmPattern = "\\{[a-zA-Z0-9]*\\}".r
     val normQuery = parmPattern.replaceAllIn(query.queryString, "?")
+    //  Build a list of ordered parameter names
     val params = parmPattern.findAllIn(query.queryString).map(s => s.substring(1, s.length - 1)).toList
-    //Create a map to be able to easil retrive parameter value from its name
+    // Create a map to be able to easily retrive parameter value from its name
     val parmValues = parameters.map(pv => pv.name -> pv.value.getOrElse("")).toMap
 
     def fillParams(s: Seq[ParameterValue], p: PositionedParameters): Unit = {
@@ -88,7 +86,7 @@ object PageResult {
     implicit val setQParam = SetParameter((s: Seq[ParameterValue], p) => fillParams(s, p))
 
     QueryResult(query,
-      Database.forURL("jdbc:h2:mem:websql", driver = "org.h2.Driver") withSession {
+      Database.forURL(WebSite.dbUrl, driver = WebSite.dbDriver) withSession {
         Q.query(normQuery).list(parameters)
       }
     )
