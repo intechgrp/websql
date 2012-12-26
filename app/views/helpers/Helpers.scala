@@ -39,5 +39,28 @@ object Helpers{
 
   def table(queryOpt:Option[QueryResult]):Html = queryOpt.map(table(_)).getOrElse(Html(""))
   
+  def select(name:String, label:String, value:String, queryOpt:Option[QueryResult])(implicit pageResult:PageResult):Html = {
+    val selectedValue = pageResult.parameter(name)
+    Html("<select name=\"%s\">\n".format(name)
+    +"<option value=\"\"></option>" // empty value
+    + queryOpt.map{query=>
+      (
+        for(line <- query.result)
+        yield {
+          val colValue = line.get(value).map(_.toString).getOrElse("")
+          val colLabel = line.get(label).map(_.toString).getOrElse("")
+          "<option " + 
+            (if (colValue == selectedValue) 
+              "selected=\"selected\" " 
+            else "") + "value=\"%s\">%s</option>\n".format(colValue,colLabel)
+        }
+      ).mkString("\n")
+    }.getOrElse("")
+    + "</select>\n")
+  }
+
+  def select(name:String,label:String, value:String, query:QueryResult)(implicit pageResult:PageResult):Html = select(name,label,value,Some(query))
+  def select(name:String,value:String, queryOpt:Option[QueryResult])(implicit pageResult:PageResult):Html = select(name,value,value,queryOpt)
+  def select(name:String,value:String, query:QueryResult)(implicit pageResult:PageResult):Html = select(name,value,Some(query))
 
 }

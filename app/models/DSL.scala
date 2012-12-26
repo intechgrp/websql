@@ -7,6 +7,7 @@ object DSL{
 
   def listPage(id:String) = new Page(id,None, html = defaultHtmlListTemplate)
   def detailPage(id:String) = new Page(id,None, html = defaultHtmlDetailTemplate)
+  def masterDetailPage(id:String) = new Page(id,None, html = views.html.templates.masterDetail.apply _)
   def customPage(id:String,template:Template[Html]) = new Page(id,None,html=template)
 
   implicit class PageWithQueryOp(val page:Page) extends AnyVal{

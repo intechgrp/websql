@@ -1,15 +1,19 @@
 @(pageResult:PageResult)
-
 @import website.Site._
+
+@implicitPageResult = @{pageResult}
 
 @** TODO : pass username in PageResult **@
 @main(WebSite.title, Some("User")) {
 
 <form class="well form-search" method="POST" action="/rechercheCompte">
     Enter an IBAN:
-    <input type="text" class="input-medium search-query" name="query" value="@pageResult.parameter("query")"/>
-    <button type="submit" class="btn">Search</button><br/>
+    <input type="text" class="input-medium search-query" name="iban" value="@pageResult.parameter("iban")"/><br/>
     <span style="font-style: italic; font-size: small; ">For example: 1123-984702</span>
+    <br/><br/>
+    Select a description:
+    @select("description","COMPTE.DESCRIPTION",pageResult.namedQueries("listOfDescription"))<br/>
+    <button type="submit" class="btn">Search</button>
 </form>
 
 @table(pageResult.defaultQuery)

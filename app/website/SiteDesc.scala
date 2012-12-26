@@ -13,7 +13,8 @@ object SiteDesc {
   val mainMenu = Map[String, String](
     "Liste des Clients"     -> "clients",
     "Liste des Comptes"     -> "comptes",
-    "Rechercher un compte"  -> "rechercheCompte?query=",
+    "Compte master/detail"  -> "comptesWithDetail",
+    "Rechercher un compte"  -> "rechercheCompte",
     "Mes comptes"           -> "myAccounts"
   )
 
@@ -70,8 +71,20 @@ object SiteDesc {
 
     /* Custom form-based (POST) search page */
     customPage("rechercheCompte",views.html.rechercheCompte.apply _)
-      withParameter form("query")
-      withQuery "select * from Compte where IBAN like {query}"      
+      withParameter form("iban") and form("description")
+      withQuery "select * from Compte where IBAN like {iban} or DESCRIPTION = {description}"
+      withQuery "listOfDescription" -> "SELECT DISTINCT DESCRIPTION FROM COMPTE"
+
+    /* Master-detail page for comptes */
+    /*
+    TODO : there is a bug when idCompte is not set, because of conversion String -> Int of an empty String
+    masterDetailPage("comptesWithDetail")
+      withParameter url("idCompte")
+      withQuery "detail"  -> "select * from COMPTE where ID = {idCompte}"
+      withQuery "list"    -> "select * from COMPTE"
+        withColumn 
+          "COMPTE.ID" -> "Detail" linkedTo "comptesWithDetail" as "idCompte" named "Afficher le détail"
+    */
 
   )
 
