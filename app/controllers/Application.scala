@@ -2,16 +2,18 @@ package controllers
 
 import play.api._
 import data.Form
-import db.DB
 import play.api.mvc._
 import models._
 import website.Site._
 import play.api.data.Forms._
 
 import play.api.Play.current
-import anorm._
 import website.SiteUtils
 import play.api.templates._
+import slick.session.{PositionedResult, Database}
+import Database.threadLocalSession
+import slick.jdbc.{StaticQuery => Q, SetParameter, GetResult}
+import collection.mutable
 
 object Application extends Controller {
 
@@ -19,30 +21,32 @@ object Application extends Controller {
     Ok(views.html.index())
   }
 
-  def getPage(id: String, format: String = null)=page(id,format)
-  def postPage(id: String, format: String = null)=page(id,format)
+  def getPage(id: String, format: String = null) = page(id, format)
 
-  private def page(id: String, format: String = null)= Action{ request=> 
-    WebSite.getPage(id) match {
+  def postPage(id: String, format: String = null) = page(id, format)
 
-      // Authentication required for this page, and not use in session : redirect to login page
-      case Some(page:Page) if page.secured && WebSite.authentication.isDefined && request.session.get("username").isEmpty =>
-        Ok(views.html.authentication()).withSession("page"->id)
+  private def page(id: String, format: String = null) = Action {
+    request =>
+      WebSite.getPage(id) match {
 
-      // Render the page according to requested format
-      case Some(page:Page) =>
-        val pageResult = PageResult.processPageQueries(PageRequest.fold(page,request))
-        format match {
-          case "xml"  => Ok(page.xml(pageResult))
-          case "csv"  => Ok(page.csv(pageResult))
-          case "json" => Ok(page.json(pageResult))
-          case _      => Ok(page.html(pageResult))
-        }
+        // Authentication required for this page, and not use in session : redirect to login page
+        case Some(page: Page) if page.secured && WebSite.authentication.isDefined && request.session.get("username").isEmpty =>
+          Ok(views.html.authentication()).withSession("page" -> id)
 
-      // Page id not found
-      case _ => 
-        NotFound(views.html.error("page " + id + " not found"))
-    }
+        // Render the page according to requested format
+        case Some(page: Page) =>
+          val pageResult = PageResult.processPageQueries(PageRequest.fold(page, request))
+          format match {
+            case "xml" => Ok(page.xml(pageResult))
+            case "csv" => Ok(page.csv(pageResult))
+            case "json" => Ok(page.json(pageResult))
+            case _ => Ok(page.html(pageResult))
+          }
+
+        // Page id not found
+        case _ =>
+          NotFound(views.html.error("page " + id + " not found"))
+      }
   }
 
   def editSiteDesc = Action {
@@ -62,20 +66,36 @@ object Application extends Controller {
       )).bindFromRequest.fold(
       errors => BadRequest, {
         folder =>
-          DB.withConnection {
-            implicit connection =>
-              SQL(WebSite.authentication.get)
-                .on("login" -> folder._1, "password" -> folder._2)
-                .apply().headOption match {
-                case None => Forbidden(views.html.authentication(Some("Incorrect username/password")))
-                case Some(row) =>
-                  Redirect("/" + request.session.get("page").getOrElse(""))
-                    .withSession("username" -> row.data(0).toString)
-              }
+          Database.forURL("jdbc:h2:mem:websql", driver = "org.h2.Driver") withSession {
+            Q.query(WebSite.authentication.get)
+              .list(List(folder._1, folder._2))
+              .headOption match {
+              case None => Forbidden(views.html.authentication(Some("Incorrect username/password")))
+              case Some(row) =>
+                Redirect("/" + request.session.get("page").getOrElse(""))
+                  .withSession("username" -> row("LOGIN").toString)
+            }
           }
       }
       )
   }
 
   def logout = Action(request => Redirect(routes.Application.index()).withNewSession)
+
+
+  implicit val getQResult = GetResult(r => convertPositionnedResult(r))
+
+  implicit val setQParam = SetParameter((s:List[String],p) => s.map(str => p.setString(str)))
+
+  private def convertPositionnedResult(r: PositionedResult): Map[String, Any] = {
+    val m = mutable.MutableList[(String, Any)]()
+    var colCount: Int = 1
+    while (r.hasMoreColumns) {
+      m.+=(r.rs.getMetaData.getColumnName(colCount) -> r.nextObject())
+      colCount += 1
+    }
+    Logger.debug(m.toList.toMap.toString)
+    m.toMap
+  }
+
 }

@@ -8,7 +8,7 @@ object SiteDesc {
 
   val title = "POC WebSql"
 
-  val authentication="select LOGIN from USER where LOGIN = {login} and PASSWORD = {password}"
+  val authentication="select LOGIN from USER where LOGIN = ? and PASSWORD = ?"
 
   val mainMenu = Map[String, String](
     "Liste des Clients"     -> "clients",

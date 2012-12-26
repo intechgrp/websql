@@ -1,0 +1,3 @@
+12-26 15:25:17 jdbc[2]: exception
+org.h2.jdbc.JdbcSQLException: Table "COMPTE" not found; SQL statement:
+select * from Compte [42102-168]
