@@ -76,7 +76,7 @@ object SiteDesc {
     customPage("rechercheCompte",views.html.rechercheCompte.apply _)
       withParameter form("iban") and form("description")
       withQuery "select * from Compte where IBAN like {iban} or DESCRIPTION = {description}"
-      withQuery "listOfDescription" -> "SELECT DISTINCT DESCRIPTION FROM COMPTE",
+      withQuery "listOfDescription" -> "SELECT DISTINCT DESCRIPTION FROM COMPTE"
 
     /* Master-detail page for comptes */
     // TODO : need new feature for "mandatory parameters" (if not set, then the query cannot be executed)
