@@ -5,6 +5,7 @@ import data.Form
 import play.api.mvc._
 import models._
 import website.Site._
+import website.Site.db
 import play.api.data.Forms._
 
 import slick.session.{PositionedResult, Database}

@@ -69,7 +69,7 @@ object PageResult {
     m.toMap
   }
 
-  private def processQuery(query: Query, parameters: Seq[ParameterValue]): QueryResult = {
+  private def processQuery(query: Query, parameters: Seq[ParameterValue],db:Database): QueryResult = {
     // Replace {nomvar} by ? in the query
     val parmPattern = "\\{[a-zA-Z0-9]*\\}".r
     val normQuery = parmPattern.replaceAllIn(query.queryString, "?")
@@ -86,17 +86,17 @@ object PageResult {
     implicit val setQParam = SetParameter((s: Seq[ParameterValue], p) => fillParams(s, p))
 
     QueryResult(query,
-      Database.forURL(WebSite.dbUrl, driver = WebSite.dbDriver) withSession {
+      db withSession {
         Q.query(normQuery).list(parameters)
       }
     )
   }
 
-  def processPageQueries(request: PageRequest): PageResult =
+  def processPageQueries(request: PageRequest)(implicit db:Database): PageResult =
     PageResult(
       request.page,
-      request.page.defaultQuery.map(processQuery(_, request.parameters)),
-      request.page.namedQueries.map(q => (q.name, processQuery(q, request.parameters))).toMap,
+      request.page.defaultQuery.map(processQuery(_, request.parameters,db)),
+      request.page.namedQueries.map(q => (q.name, processQuery(q, request.parameters,db))).toMap,
       request.parameters
     )
 
