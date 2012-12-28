@@ -25,7 +25,6 @@ case class Site(title:String, authentication:Option[String]=None) {
 object Site {
 
   val WebSite: Site = new Site(SiteDesc.title,SiteDesc.authentication match { case null => None case _ => Some(SiteDesc.authentication)})
-  implicit val db = Database.forURL(WebSite.dbUrl, driver = WebSite.dbDriver)
           
   {
     WebSite.addPages(SiteDesc.pages)
@@ -33,5 +32,7 @@ object Site {
     WebSite.dbUrl = SiteDesc.dbUrl
     WebSite.dbDriver = SiteDesc.dbDriver
   }
+
+  implicit val db = Database.forURL(WebSite.dbUrl, driver = WebSite.dbDriver)
 
 }

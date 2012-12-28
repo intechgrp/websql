@@ -13,7 +13,7 @@ object Global extends GlobalSettings {
 
 
   def insertTestData() {
-    Database.forURL("jdbc:h2:mem:websql", driver = "org.h2.Driver") withSession {
+    website.Site.db withSession {
           if(Q.queryNA("select * from client").list.size == 0){
             (Q.u + "insert into Client(nom, prenom, adresse, login) values('CROISEAUX', 'Fabrice', '12 rue Claude Monet', 'fcx')").execute
             (Q.u + "insert into Client(nom, prenom, adresse, login) values('DETANTE', 'Antoine', '1 rue des Roses', 'ade')").execute
