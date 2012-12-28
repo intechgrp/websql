@@ -68,12 +68,16 @@ object DSL{
     def as(pName:String) = new SimpleColumnLinkOp(page, query, column, link.copy(parameterName = Some(pName)))
     def named(title:String) = new SimpleColumnLinkOp(page, query, column, link.copy(title = Some(title)))
     def and(c2:(String,String)) = new SimpleQueryWithColumnOp(page, query.copy(columns=query.columns :+ column.copy(link=Some(link))),Column(c2._1,c2._2))
+    def withQuery(newQuery:NamedQuery) = new PageNamedQueryOp(page.copy(defaultQuery = Some( query.copy(columns=query.columns :+ column.copy(link=Some(link))))),newQuery)
+    def withQuery(newQuery:SimpleQuery) = new PageSimpleQueryOp(page.copy(defaultQuery = Some( query.copy(columns=query.columns :+ column.copy(link=Some(link))))),newQuery)
   }
 
   private[DSL] class NamedColumnLinkOp(val page:Page, val query:NamedQuery, val column:Column, val link:Link){
     def as(pName:String) = new NamedColumnLinkOp(page, query, column, link.copy(parameterName = Some(pName)))
     def named(title:String) = new NamedColumnLinkOp(page, query, column, link.copy(title = Some(title)))
     def and(c2:(String,String)) = new NamedQueryWithColumnOp(page, query.copy(columns=query.columns :+ column.copy(link=Some(link))),Column(c2._1,c2._2))
+    def withQuery(newQuery:NamedQuery) = new PageNamedQueryOp(page.copy(namedQueries = page.namedQueries :+ query.copy(columns=query.columns :+ column.copy(link=Some(link)))),newQuery)
+    def withQuery(newQuery:SimpleQuery) = new PageSimpleQueryOp(page.copy(namedQueries = page.namedQueries :+ query.copy(columns=query.columns :+ column.copy(link=Some(link)))),newQuery)
   }
   
 }

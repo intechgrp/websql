@@ -119,10 +119,11 @@ class DSL extends Specification {
           form("user") withQuery
           "select * from users where min > {min} and max < {max}" withQuery
           "secondQuery" -> "select fName,lName,id from user where user = {user}" withColumn
-            "fName" -> "First name" and "lName" -> "Last name" and "id" -> "Detail" linkedTo "detailPage" as "id" named "Detail"
+            "fName" -> "First name" and "lName" -> "Last name" and "id" -> "Detail" linkedTo "detailPage" as "id" named "Detail" withQuery
+          "lastQuery" -> "select * from T"
 
       res.defaultQuery must beSome
-      res.namedQueries.size must be equalTo(1)
+      res.namedQueries.size must be equalTo(2)
       res.parameters.size must be equalTo(3)
     }
   }
