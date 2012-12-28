@@ -27,11 +27,11 @@ object SiteDesc {
     listPage("clients") 
       withQuery "SELECT ID,NOM,PRENOM,ADRESSE,LOGIN FROM CLIENT" 
       withColumn 
-            "CLIENT.ID"       -> "Identifiant" linkedTo "client" as "idClient" named "Afficher le détail"
-        and "CLIENT.NOM"      -> "Nom"
-        and "CLIENT.PRENOM"   -> "Prénom"
-        and "CLIENT.ADRESSE"  -> "Adresse"
-        and "CLIENT.LOGIN"    -> "Login",
+            "ID"       -> "Identifiant" linkedTo "client" as "idClient" named "Afficher le détail"
+        and "NOM"      -> "Nom"
+        and "PRENOM"   -> "Prénom"
+        and "ADRESSE"  -> "Adresse"
+        and "LOGIN"    -> "Login",
 
 
     /* Detail page of a client */
@@ -39,18 +39,18 @@ object SiteDesc {
       withParameter url("idClient") 
       withQuery "SELECT ID,NOM,PRENOM,ADRESSE,LOGIN FROM CLIENT WHERE ID = {idClient}" 
       withColumn 
-            "CLIENT.ID"       -> "Identifiant" 
-        and "CLIENT.NOM"      -> "Nom" 
-        and "CLIENT.PRENOM"   -> "Prénom" 
-        and "CLIENT.ADRESSE"  -> "Address" 
-        and "CLIENT.LOGIN"    -> "Login",
+            "ID"       -> "Identifiant" 
+        and "NOM"      -> "Nom" 
+        and "PRENOM"   -> "Prénom" 
+        and "ADRESSE"  -> "Address" 
+        and "LOGIN"    -> "Login",
 
 
     /* List of all accounts, with a link to account detail page */
     listPage("comptes")
       withQuery "SELECT ID,IBAN,DESCRIPTION,SOLDE,DEVISE,CLIENT FROM COMPTE" 
       withColumn 
-        "COMPTE.ID" -> "Identifiant" linkedTo "compte" as "idCompte",
+        "ID" -> "Identifiant" linkedTo "compte" as "idCompte",
       
 
     /* Detail page of an account */
@@ -66,28 +66,27 @@ object SiteDesc {
             from COMPTE, CLIENT
             where COMPTE.CLIENT = CLIENT.ID and CLIENT.LOGIN = {username}"""
       withColumn 
-            "COMPTE.IBAN"     -> "IBAN"
-        and "COMPTE.DESCRIPTION" -> "Description"
-        and "COMPTE.SOLDE"    -> "Solde"
-        and "COMPTE.DEVISE"   -> "Devise",
+            "IBAN"     -> "IBAN"
+        and "DESCRIPTION" -> "Description"
+        and "SOLDE"    -> "Solde"
+        and "DEVISE"   -> "Devise",
 
 
     /* Custom form-based (POST) search page */
     customPage("rechercheCompte",views.html.rechercheCompte.apply _)
       withParameter form("iban") and form("description")
       withQuery "select * from Compte where IBAN like {iban} or DESCRIPTION = {description}"
-      withQuery "listOfDescription" -> "SELECT DISTINCT DESCRIPTION FROM COMPTE"
+      withQuery "listOfDescription" -> "SELECT DISTINCT DESCRIPTION FROM COMPTE",
 
     /* Master-detail page for comptes */
-    /*
-    TODO : there is a bug when idCompte is not set, because of conversion String -> Int of an empty String
-    masterDetailPage("comptesWithDetail")
+    // TODO : need new feature for "mandatory parameters" (if not set, then the query cannot be executed)
+    /*masterDetailPage("comptesWithDetail")
       withParameter url("idCompte")
-      withQuery "detail"  -> "select * from COMPTE where ID = {idCompte}"
       withQuery "list"    -> "select * from COMPTE"
         withColumn 
-          "COMPTE.ID" -> "Detail" linkedTo "comptesWithDetail" as "idCompte" named "Afficher le détail"
-    */
+          "ID" -> "Detail" linkedTo "comptesWithDetail" as "idCompte" named "Afficher le détail"
+      withQuery "detail"  -> "select * from COMPTE where ID = {idCompte}"*/
+      
 
   )
 
