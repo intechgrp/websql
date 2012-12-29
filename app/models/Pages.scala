@@ -9,6 +9,13 @@ case class Link(toPage:String, parameterName:Option[String]=None, title:Option[S
 trait Query{
   def queryString:String
   def columns:Seq[Column]
+
+  // Replace {nomvar} by ? in the query
+  val parmPattern = "\\{[a-zA-Z0-9]*\\}".r
+  lazy val normQuery = parmPattern.replaceAllIn(queryString, "?")
+  //  Build a list of ordered parameter names
+  lazy val paramNames = parmPattern.findAllIn(queryString).map(s => s.substring(1, s.length - 1)).toList
+
 }
 
 case class NamedQuery(name:String, queryString:String,columns:Seq[Column]) extends Query

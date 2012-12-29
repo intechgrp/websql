@@ -62,7 +62,7 @@ object PageResult {
 
   implicit val getQResult = GetResult(r => convertPositionnedResult(r))
 
-  private def convertPositionnedResult(r: PositionedResult): Map[String, Any] = {
+  def convertPositionnedResult(r: PositionedResult): Map[String, Any] = {
     val m = mutable.MutableList[(String, Any)]()
     while (r.hasMoreColumns)
       m.+=(r.rs.getMetaData.getColumnName(r.currentPos+1) -> r.nextObject())
@@ -70,16 +70,11 @@ object PageResult {
   }
 
   private def processQuery(query: Query, parameters: Seq[ParameterValue],db:Database): QueryResult = {
-    // Replace {nomvar} by ? in the query
-    val parmPattern = "\\{[a-zA-Z0-9]*\\}".r
-    val normQuery = parmPattern.replaceAllIn(query.queryString, "?")
-    //  Build a list of ordered parameter names
-    val params = parmPattern.findAllIn(query.queryString).map(s => s.substring(1, s.length - 1)).toList
-    // Create a map to be able to easily retrive parameter value from its name
-    val parmValues = parameters.map(pv => pv.name -> pv.value.getOrElse("")).toMap
+    // Create a map to be able to easily retrieve parameter value from its name
+    val parmMap = parameters.map(pv => pv.name -> pv.value.getOrElse("")).toMap
 
     def fillParams(s: Seq[ParameterValue], p: PositionedParameters): Unit = {
-      params.map(s => p.setString(parmValues(s)))
+      query.paramNames.map(s => p.setString(parmMap(s)))
     }
 
     //used by Slick to feed the SqlStatement from the sequence of ParameterValue
@@ -87,7 +82,7 @@ object PageResult {
 
     QueryResult(query,
       db withSession {
-        Q.query(normQuery).list(parameters)
+        Q.query(query.normQuery).list(parameters)
       }
     )
   }

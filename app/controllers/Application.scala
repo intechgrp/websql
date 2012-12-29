@@ -8,10 +8,9 @@ import website.Site._
 import website.Site.db
 import play.api.data.Forms._
 
-import slick.session.{PositionedResult, Database}
+import slick.session.Database
 import Database.threadLocalSession
 import slick.jdbc.{StaticQuery => Q, SetParameter, GetResult}
-import collection.mutable
 
 
 object Application extends Controller {
@@ -65,7 +64,7 @@ object Application extends Controller {
       )).bindFromRequest.fold(
       errors => BadRequest, {
         folder =>
-          Database.forURL(WebSite.dbUrl, driver = WebSite.dbDriver) withSession {
+          db withSession {
             Q.query(WebSite.authentication.get)
               .list(List(folder._1, folder._2))
               .headOption match {
@@ -82,15 +81,10 @@ object Application extends Controller {
   def logout = Action(request => Redirect(routes.Application.index()).withNewSession)
 
 
-  implicit val getQResult = GetResult(r => convertPositionnedResult(r))
+  implicit val getQResult = GetResult(r => PageResult.convertPositionnedResult(r))
 
+  // TODO May have to be modified to support all parameter types
   implicit val setQParam = SetParameter((s: List[String], p) => s.map(str => p.setString(str)))
 
-  private def convertPositionnedResult(r: PositionedResult): Map[String, Any] = {
-    val m = mutable.MutableList[(String, Any)]()
-    while (r.hasMoreColumns)
-      m.+=(r.rs.getMetaData.getColumnName(r.currentPos + 1) -> r.nextObject())
-    m.toMap
-  }
 
 }
