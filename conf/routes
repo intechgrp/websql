@@ -5,19 +5,16 @@
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
-# Authentication
-POST    /login                      controllers.Application.login
-GET     /logout                     controllers.Application.logout
 
-# Home page
 GET     /                           controllers.Application.index
 GET     /editSite                   controllers.Application.editSiteDesc
 GET     /saveSite                   controllers.Application.saveSiteDesc(source:String)
 
-GET     /:id                        controllers.Application.getPage(id, format:String ?="html")
-POST	/:id  						controllers.Application.postPage(id, format:String ?="html")
 
+POST    /login                      controllers.WebSQL.login
+GET     /logout                     controllers.WebSQL.logout
 
-# Map static resources from the /public folder to the /assets URL path
+GET     /:id                        controllers.WebSQL.getPage(id, format:String ?="html")
+POST	/:id  						controllers.WebSQL.postPage(id, format:String ?="html")
+
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
-
