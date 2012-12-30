@@ -16,7 +16,6 @@ class SiteDesc extends Website {
   override val mainMenu = Map[String, String](
     "Liste des Clients"     -> "clients",
     "Liste des Comptes"     -> "comptes",
-    "Compte master/detail"  -> "comptesWithDetail",
     "Rechercher un compte"  -> "rechercheCompte",
     "Mes comptes"           -> "myAccounts"
   )
