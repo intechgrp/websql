@@ -18,8 +18,7 @@ trait Website{
 }
 
 object Site{
-  Play.application().classloader().loadClass("website.SiteDesc")
-  lazy val WebSite:Website=Class.forName("website.SiteDesc").newInstance.asInstanceOf[Website]
+   lazy val WebSite:Website=Play.application().classloader().loadClass("website.SiteDesc").newInstance.asInstanceOf[Website]
 
   implicit lazy val db = Database.forURL(WebSite.dbUrl, driver = WebSite.dbDriver)
 }
