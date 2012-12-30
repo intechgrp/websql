@@ -3,6 +3,7 @@ package website
 import models.Page
 import collection.mutable.MutableList
 import slick.session.Database
+import play.Play
 
 trait Website{
   def title:String
@@ -17,6 +18,7 @@ trait Website{
 }
 
 object Site{
+  Play.application().classloader().loadClass("website.SiteDesc")
   lazy val WebSite:Website=Class.forName("website.SiteDesc").newInstance.asInstanceOf[Website]
 
   implicit lazy val db = Database.forURL(WebSite.dbUrl, driver = WebSite.dbDriver)
