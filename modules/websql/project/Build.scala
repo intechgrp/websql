@@ -4,9 +4,6 @@ import PlayKeys._
 
 object WebSQLModule extends Build {
 
-  organization := "lu.intech"
-
-  scalaVersion := "2.10.0-RC5"
 
   val appName = "websql-module"
   val appVersion = "2.0-SNAPSHOT"
@@ -23,7 +20,9 @@ object WebSQLModule extends Build {
     scalacOptions ++= Seq(
       "-feature", 
       "-language:postfixOps,implicitConversions"
-    )
+    ),
+    organization := "lu.intech",
+    scalaVersion := "2.10.0-RC5"
   )
 
 }

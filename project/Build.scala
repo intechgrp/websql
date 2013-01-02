@@ -11,7 +11,7 @@ object ApplicationBuild extends Build {
     "com.typesafe" % "slick_2.10.0-RC1" % "0.11.2",
     "org.slf4j" % "slf4j-nop" % "1.6.4",
     "com.h2database" % "h2" % "1.3.166",
-    "websql-module" %% "websql-module" % "2.0-SNAPSHOT",
+    "lu.intech" %% "websql-module" % "2.0-SNAPSHOT",
     jdbc
   )
 
