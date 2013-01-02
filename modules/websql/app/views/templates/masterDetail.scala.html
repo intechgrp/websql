@@ -1,9 +1,9 @@
 @(pageResult:PageResult)
 
 @import website.Site._
+@import views.helpers.Helpers._
 
-@** TODO : pass username in PageResult **@
-@main(WebSite.title, Some("User")) {
+@WebSite.mainTemplate(pageResult.authenticatedUser) {
 
 	@table(pageResult.namedQueries("list"))
 

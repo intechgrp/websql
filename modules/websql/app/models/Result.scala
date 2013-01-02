@@ -49,7 +49,7 @@ case class QueryResult(query: Query, result: List[Map[String, Any]]) {
 }
 
 
-case class PageResult(page: Page, defaultQuery: Option[QueryResult], namedQueries: Map[String, QueryResult], parameters: Seq[ParameterValue]) {
+case class PageResult(page: Page, defaultQuery: Option[QueryResult], namedQueries: Map[String, QueryResult], parameters: Seq[ParameterValue], authenticatedUser:Option[String]) {
   private val parameterMap = parameters.collect {
     case ParameterValue(pName, Some(pValue)) => (pName, pValue)
   }.toMap
@@ -92,7 +92,8 @@ object PageResult {
       request.page,
       request.page.defaultQuery.map(processQuery(_, request.parameters,db)),
       request.page.namedQueries.map(q => (q.name, processQuery(q, request.parameters,db))).toMap,
-      request.parameters
+      request.parameters,
+      request.user
     )
 
 

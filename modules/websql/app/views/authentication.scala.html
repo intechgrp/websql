@@ -1,7 +1,7 @@
 @(error:Option[String]=None)
 @import website.Site._
 
-@main(WebSite.title, None) {
+@WebSite.mainTemplate(None){
 
 <!-- Main hero unit for a primary marketing message or call to action -->
 <div class="hero-unit">
@@ -10,7 +10,7 @@
     <p>Dynamic Web Site generation based on SQL Queries</p>
 
 </div>
-<form class="form-horizontal" method="POST" action="@routes.Application.login">
+<form class="form-horizontal" method="POST" action="@routes.WebSQL.login">
     <fieldset>
         <div class="control-group @error.map{t=>error}">
             <label class="control-label" for="username">Login:</label>

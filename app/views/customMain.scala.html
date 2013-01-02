@@ -1,4 +1,4 @@
-@(title: String, username:Option[String])(content: Html)
+@(user:Option[String])(content: Html)
 
 @import website.Site._
 
@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="A Rich Play! 2.0 Application">
 
-    <title>@title</title>
+    <title>Custom template</title>
     <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
 
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("lib/bootstrap/css/bootstrap.min.css")">
@@ -35,18 +35,18 @@
           <a class="brand" href="/">Websql</a>
           <div class="nav-collapse">
             <ul class="nav">
-                @WebSite.menu.map { item =>
+                @WebSite.mainMenu.map { item =>
               <li><a href="/@item._2">@item._1</a></li>
                 }
             </ul>
               <div class="btn-group pull-right">
-                  @username.map{user=>
+                @user.map{user=>
                       <a class="btn dropdown-toggle btn-user" data-toggle="dropdown" href="#">
                           @user
                           <span class="caret"></span>
                       </a>
                       <ul class="dropdown-menu">
-                          <li><a href="@routes.Application.logout">Logout</a></li>
+                          <li><a href="@routes.WebSQL.logout">Logout</a></li>
                       </ul>
                 }
                 <a class="btn btn-danger" href="/editSite">Edit site</a>
@@ -60,7 +60,7 @@
       @content
       <hr>
       <footer>
-        <p>Powered by &copy; InTech 2012</p>
+        <p>Powered by &copy; InTech 2013</p>
       </footer>
     </div> <!-- /container -->
   </body>

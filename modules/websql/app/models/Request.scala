@@ -25,7 +25,7 @@ object ParameterValue{
 
 }
 
-case class PageRequest(page:Page,parameters:Seq[ParameterValue])
+case class PageRequest(page:Page,parameters:Seq[ParameterValue],user:Option[String])
 
 object PageRequest{
 
@@ -38,7 +38,8 @@ object PageRequest{
           List(ParameterValue("username",request.session.get("username")))
         else 
           List()
-    )
+    ),
+    request.session.get("username")
   )
 
 }

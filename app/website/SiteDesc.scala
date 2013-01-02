@@ -4,24 +4,25 @@ import models._
 import models.Page._
 import models.DSL._
 
-object SiteDesc {
+class SiteDesc extends Website {
 
-  val title = "POC WebSql"
+  override val title = "POC WebSql"
 
-  val dbUrl = "jdbc:h2:mem:websql"
-  val dbDriver = "org.h2.Driver"
+  override val mainTemplate = views.html.customMain.apply _
 
-  val authentication="select LOGIN from USER where LOGIN = ? and PASSWORD = ?"
+  override val dbUrl = "jdbc:h2:mem:websql"
+  override val dbDriver = "org.h2.Driver"
 
-  val mainMenu = Map[String, String](
+  override val authentication="select LOGIN from USER where LOGIN = ? and PASSWORD = ?"
+
+  override val mainMenu = Map[String, String](
     "Liste des Clients"     -> "clients",
     "Liste des Comptes"     -> "comptes",
-    "Compte master/detail"  -> "comptesWithDetail",
     "Rechercher un compte"  -> "rechercheCompte",
     "Mes comptes"           -> "myAccounts"
   )
 
-  val pages = List[Page](
+  override val pages = List[Page](
 
     /* List of all clients, with a link to detail page of a client */
     listPage("clients") 
