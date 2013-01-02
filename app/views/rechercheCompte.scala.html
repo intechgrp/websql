@@ -3,8 +3,7 @@
 
 @implicitPageResult = @{pageResult}
 
-@** TODO : pass username in PageResult **@
-@main(WebSite.title, Some("User")) {
+@customMain(pageResult.authenticatedUser) {
 
 <form class="well form-search" method="POST" action="/rechercheCompte">
     Enter an IBAN:

@@ -8,6 +8,8 @@ class SiteDesc extends Website {
 
   override val title = "POC WebSql"
 
+  override val mainTemplate = views.html.customMain.apply _
+
   override val dbUrl = "jdbc:h2:mem:websql"
   override val dbDriver = "org.h2.Driver"
 

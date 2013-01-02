@@ -1,4 +1,4 @@
-@(title: String, username:Option[String])(content: Html)
+@(authenticatedUser:Option[String])(content: Html)
 
 @import website.Site._
 
@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="A Rich Play! 2.0 Application">
 
-    <title>@title</title>
+    <title>WebSQL</title>
     <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
 
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("lib/bootstrap/css/bootstrap.min.css")">
@@ -40,6 +40,7 @@
                 }
             </ul>
               <div class="btn-group pull-right">
+                  @**
                   @username.map{user=>
                       <a class="btn dropdown-toggle btn-user" data-toggle="dropdown" href="#">
                           @user
@@ -48,7 +49,9 @@
                       <ul class="dropdown-menu">
                           <li><a href="@routes.WebSQL.logout">Logout</a></li>
                       </ul>
-                }
+                      
+                }**@
+                <li><a href="@routes.WebSQL.logout">Logout</a></li>
                 <a class="btn btn-danger" href="/editSite">Edit site</a>
               </div>
           </div><!--/.nav-collapse -->
