@@ -18,6 +18,8 @@ trait Website{
    // Optional
    def authentication:String=null
    def mainTemplate:(Option[String] => Html => Html)=views.html.main.apply _
+   def dbUser:String=null
+   def dbPassword:String=null
 
    // Utilities
    def getPage(key:String):Option[Page] = pages.find(_.id == key)
@@ -29,6 +31,6 @@ object Site{
   import play.api.Play.current
   lazy val WebSite:Website=Play.application().classloader().loadClass(play.api.Play.configuration.getString("sitedesc").getOrElse("website.SiteDesc")).newInstance.asInstanceOf[Website]
 
-  implicit lazy val db = Database.forURL(WebSite.dbUrl, driver = WebSite.dbDriver)
+  implicit lazy val db = Database.forURL(WebSite.dbUrl, driver = WebSite.dbDriver, user = WebSite.dbUser, password = WebSite.dbPassword)
 }
 
