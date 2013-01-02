@@ -18,8 +18,6 @@ TODO
 =====================================
 
 * Support for PATH parameters (/page/xxx)
-* Add username to PageResult
 * Update DSL for authentication and customTemplate pages
-* Add generic template for master/detail view
 * Handle required parameters
 * Handle multi-language
