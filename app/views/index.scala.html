@@ -130,12 +130,30 @@
     </div>
 
     <div class="quality">
+        <h2>Support for existing Play! applications</h2>
+        <p>
+            WebSQL is a Play! module (for Play 2.1). Just add the dependency to your Build.scala file :
+        <pre class="prettyprint">
+<code>
+val appDependencies = Seq(
+    (...),
+    "lu.intech" %% "websql-module" % "2.0-SNAPSHOT"
+  )
+</code>
+        </pre>
+        </p>
+        <p><a class="btn btn-primary" href="#">View details &raquo;</a></p>
+    </div>
+
+    <div class="quality">
         <h2>Create your site in few minutes</h2>
 
         <p>
             WebSql allows you to create a dynamic Web Site by entering SQL Queries.<br/>
             To create a new page that lists all clients :
-        <pre class="prettyprint"><code>ListPage("clients") fromQuery "Select * from Client"</code></pre>
+        <pre class="prettyprint">
+<code>listPage("clients") withQuery "SELECT ID,NOM,PRENOM,ADRESSE,LOGIN FROM CLIENT"</code>
+        </pre>
         </p>
         <p><a class="btn btn-primary" href="#">View details &raquo;</a></p>
     </div>
@@ -148,9 +166,9 @@
             Specific templates are easy to create with our intuitive syntax.<br/>
             You can also generate <strong>xml</strong> or <strong>json</strong> rendering by explicitly specifying the
             format.
-            <pre><code><a href="/client/1" target="_blank">http://www.yoursite.com/client/1</a>
-<a href="/client/1?format=xml" target="_blank">http://www.yoursite.com/client/1?format=xml</a>
-<a href="/client/1?format=json" target="_blank">http://www.yoursite.com/client/1/?format=json</a></code></pre>
+            <pre><code><a href="/client?idClient=1" target="_blank">http://www.yoursite.com/client?idClient=1</a>
+<a href="/client?idClient=1&format=xml" target="_blank">http://www.yoursite.com/client?idClient=1&amp;format=xml</a>
+<a href="/client?idClient=1&format=json" target="_blank">http://www.yoursite.com/client?idClient=1&amp;?format=json</a></code></pre>
         </p>
         <p><a class="btn btn-primary" href="#">View details &raquo;</a></p>
     </div>
@@ -174,8 +192,14 @@
         <p>
             And secure pages as you want !
         </p>
-        <pre class="prettyprint"><code>ListPage("accounts") fromQuery "Select * from accounts where user = {username}" withAuthentication</code></pre>
-
+        <pre class="prettyprint">
+<code>
+listPage("myAccounts").withAuthentication
+withQuery 
+    &quot;&quot;&quot;select COMPTE.IBAN,COMPTE.DESCRIPTION,COMPTE.SOLDE,COMPTE.DEVISE
+        from COMPTE, CLIENT
+        where COMPTE.CLIENT = CLIENT.ID and CLIENT.LOGIN = {username}&quot;&quot;&quot;</code>
+        </pre>
         <p><a class="btn btn-primary" href="#">View details &raquo;</a></p>
     </div>
 
