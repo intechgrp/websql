@@ -17,7 +17,7 @@ pour le détail
 TODO 
 =====================================
 
-* Support for PATH parameters (/page/xxx)
 * Update DSL for authentication and customTemplate pages
 * Handle required parameters
 * Handle multi-language
+* Fix DSL for asPath value

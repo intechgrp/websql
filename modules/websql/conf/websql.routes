@@ -1,7 +1,0 @@
-POST    /login                      controllers.WebSQL.login
-GET     /logout                     controllers.WebSQL.logout
-
-GET     /:id                        controllers.WebSQL.getPage(id, format:String ?="html")
-POST	/:id  						controllers.WebSQL.postPage(id, format:String ?="html")
-
-GET     /assets/*file               controllers.Assets.at(path="/public", file)

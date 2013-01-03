@@ -6,6 +6,8 @@ case class ParameterValue(name:String, value:Option[String])
 
 object ParameterValue{
 
+  private val PathParameterExtractor = "/.*/([^\\?]*).*".r
+
   // TODO : handle other request bodies, like JSON, XML,...
   def fromRequest(parameter:Parameter,request:Request[AnyContent]):ParameterValue = 
     ParameterValue(
@@ -17,6 +19,11 @@ object ParameterValue{
           request.body.asFormUrlEncoded.map{formData=>
               for (values <- formData.get(paramName)) yield values.head
             }.getOrElse(None)
+        case PathParameter(paramName) =>
+          request.uri match {
+            case PathParameterExtractor(value)  => Some(value)
+            case _                              =>  None
+          }
         case _ => None
       }
     )

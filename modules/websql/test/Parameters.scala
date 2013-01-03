@@ -1,6 +1,9 @@
 import org.specs2.mutable._
 import models._
 import play.api.test.FakeRequest
+import play.api.test._
+import play.api.test.Helpers._
+
 
 class Parameters extends Specification {
 
@@ -20,6 +23,26 @@ class Parameters extends Specification {
         FakeRequest("GET","/controller?p2=v2")
       )
       result must be equalTo(ParameterValue("p1",None))
+    }
+
+    "Return a value for a path parameter" in {
+      running(fakeApplication) {
+        val result = ParameterValue.fromRequest(
+          PathParameter("test"),
+          FakeRequest("GET","/controller/value")
+        )
+        result must be equalTo(ParameterValue("test",Some("value")))
+      }
+    }
+
+    "Return None for a non-existant path parameter" in {
+      running(fakeApplication) {
+        val result = ParameterValue.fromRequest(
+          PathParameter("test"),
+          FakeRequest("GET","/controller")
+        )
+        result must be equalTo(ParameterValue("test",None))
+      }
     }
 
     "Return values for a list of get parameters" in {
@@ -72,7 +95,7 @@ class Parameters extends Specification {
       getParameterValue("p2",results) must beSome.which(_ == ParameterValue("p2",Some("v2")))
     }
 
-    "Return correct values for get and post parameters" in {
+    "Return correct values for get, post and path parameters" in {
       val results = ParameterValue.fromRequest(
         Seq(
           GetParameter("g1"),
@@ -80,15 +103,16 @@ class Parameters extends Specification {
           GetParameter("g4"),
           PostParameter("p1"),
           PostParameter("p2"),
-          PostParameter("p4")
+          PostParameter("p4"),
+          PathParameter("path")
         ),
-        FakeRequest("POST", "/controller?g1=vg1&g2=vg2&g3=vg3").withFormUrlEncodedBody(
+        FakeRequest("POST", "/controller/pathValue?g1=vg1&g2=vg2&g3=vg3").withFormUrlEncodedBody(
           "p1" -> "vp1",
           "p2" -> "vp2",
           "p3" -> "vp3"
         )
       )
-      results.size must be equalTo(6)
+      results.size must be equalTo(7)
       
       getParameterValue("g1",results) must beSome.which(_ == ParameterValue("g1",Some("vg1")))
       getParameterValue("g2",results) must beSome.which(_ == ParameterValue("g2",Some("vg2")))
@@ -96,6 +120,7 @@ class Parameters extends Specification {
       getParameterValue("p1",results) must beSome.which(_ == ParameterValue("p1",Some("vp1")))
       getParameterValue("p2",results) must beSome.which(_ == ParameterValue("p2",Some("vp2")))
       getParameterValue("p4",results) must beSome.which(_ == ParameterValue("p4",None))
+      getParameterValue("path",results) must beSome.which(_ == ParameterValue("path",Some("pathValue")))
     }
 
     "Fold a PageRequest from a Page and a FakeRequest" in {
@@ -123,5 +148,9 @@ class Parameters extends Specification {
   }
 
   private def getParameterValue(name:String, results:Seq[ParameterValue]):Option[ParameterValue] = results.find(_.name == name)
+
+  private val fakeApplication = FakeApplication(
+    additionalConfiguration = inMemoryDatabase() + ("evolutionplugin" -> "disabled")
+  )
 
 }

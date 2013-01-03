@@ -15,6 +15,10 @@ import slick.jdbc.{StaticQuery => Q, SetParameter, GetResult}
 
 object WebSQL extends Controller {
 
+  // TODO : dummy parameter for dynamic routes in route file... another way ? 
+  def getPageWithParameters(id: String, format: String = null, params:String = null) = page(id, format)
+  def postPageWithParameters(id: String, format: String = null, params:String = null) = page(id, format)
+
   def getPage(id: String, format: String = null) = page(id, format)
 
   def postPage(id: String, format: String = null) = page(id, format)

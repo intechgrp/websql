@@ -62,10 +62,11 @@ object DSL{
 
   def url(name:String) = GetParameter(name)
   def form(name:String) = PostParameter(name)
-
+  def path(name:String) = PathParameter(name)
 
   private[DSL] class SimpleColumnLinkOp(val page:Page, val query:SimpleQuery, val column:Column, val link:Link){
-    def as(pName:String) = new SimpleColumnLinkOp(page, query, column, link.copy(parameterName = Some(pName)))
+    def as(pName:String) = new SimpleColumnLinkOp(page, query, column, link.copy(parameter = Some(GetParameter(pName))))
+    def asPath = new SimpleColumnLinkOp(page, query, column, link.copy(parameter = Some(PathParameter("path"))))
     def named(title:String) = new SimpleColumnLinkOp(page, query, column, link.copy(title = Some(title)))
     def and(c2:(String,String)) = new SimpleQueryWithColumnOp(page, query.copy(columns=query.columns :+ column.copy(link=Some(link))),Column(c2._1,c2._2))
     def withQuery(newQuery:NamedQuery) = new PageNamedQueryOp(page.copy(defaultQuery = Some( query.copy(columns=query.columns :+ column.copy(link=Some(link))))),newQuery)
@@ -73,7 +74,8 @@ object DSL{
   }
 
   private[DSL] class NamedColumnLinkOp(val page:Page, val query:NamedQuery, val column:Column, val link:Link){
-    def as(pName:String) = new NamedColumnLinkOp(page, query, column, link.copy(parameterName = Some(pName)))
+    def as(pName:String) = new NamedColumnLinkOp(page, query, column, link.copy(parameter = Some(GetParameter(pName))))
+    def asPath = new NamedColumnLinkOp(page, query, column, link.copy(parameter = Some(PathParameter("path"))))
     def named(title:String) = new NamedColumnLinkOp(page, query, column, link.copy(title = Some(title)))
     def and(c2:(String,String)) = new NamedQueryWithColumnOp(page, query.copy(columns=query.columns :+ column.copy(link=Some(link))),Column(c2._1,c2._2))
     def withQuery(newQuery:NamedQuery) = new PageNamedQueryOp(page.copy(namedQueries = page.namedQueries :+ query.copy(columns=query.columns :+ column.copy(link=Some(link)))),newQuery)

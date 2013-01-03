@@ -51,26 +51,27 @@ class SiteDesc extends Website {
     listPage("comptes")
       withQuery "SELECT ID,IBAN,DESCRIPTION,SOLDE,DEVISE,CLIENT FROM COMPTE" 
       withColumn 
-        "ID" -> "Identifiant" linkedTo "compte" as "idCompte",
+        "ID" -> "Identifiant" linkedTo "compte" asPath,
       
 
     /* Detail page of an account */
     detailPage("compte") 
-      withParameter url("idCompte")
+      withParameter path("idCompte")
       withQuery "SELECT ID,IBAN,DESCRIPTION,SOLDE,DEVISE,CLIENT FROM COMPTE WHERE ID = {idCompte}",
 
     
     /* Secured page, listing account list filtered with the current user */
     listPage("myAccounts").withAuthentication
       withQuery 
-        """ select COMPTE.IBAN,COMPTE.DESCRIPTION,COMPTE.SOLDE,COMPTE.DEVISE
+        """ select COMPTE.IBAN,COMPTE.DESCRIPTION,COMPTE.SOLDE,COMPTE.DEVISE,COMPTE.ID
             from COMPTE, CLIENT
             where COMPTE.CLIENT = CLIENT.ID and CLIENT.LOGIN = {username}"""
       withColumn 
             "IBAN"     -> "IBAN"
         and "DESCRIPTION" -> "Description"
         and "SOLDE"    -> "Solde"
-        and "DEVISE"   -> "Devise",
+        and "DEVISE"   -> "Devise"
+        and "ID"       -> "ID" linkedTo "compte" named "Détail" asPath,
 
 
     /* Custom form-based (POST) search page */

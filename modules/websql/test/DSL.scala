@@ -68,6 +68,12 @@ class DSL extends Specification {
       res.parameters.size must be equalTo(2)
     }
 
+    "Create a page with path parameter" in {
+      val res =
+        detailPage("test") withParameter path("first") and url("other")
+      res.parameters.size must be equalTo(2)
+    }
+
     "Create a page with a simple link" in {
       val res = 
         detailPage("test") withQuery
@@ -96,9 +102,17 @@ class DSL extends Specification {
         detailPage("test") withQuery 
           "select a,b,c from T" withColumn "a" -> "Col A" linkedTo "aPage" and "b" -> "Col B" linkedTo "anotherPage" as "newParam" and "c" -> "Col C"
       res.defaultQuery.get.columns(0).link must beSome
-      res.defaultQuery.get.columns(0).link.get.parameterName must beNone
+      res.defaultQuery.get.columns(0).link.get.parameter must beNone
       res.defaultQuery.get.columns(1).link must beSome
-      res.defaultQuery.get.columns(1).link.get.parameterName must beSome
+      res.defaultQuery.get.columns(1).link.get.parameter must beSome
+    }
+
+    "Create a page with link with path parameter" in {
+      val res =
+        (detailPage("test") withQuery 
+          "select a,b,c from T" withColumn "a" -> "Col A" linkedTo "aPage" asPath)
+      res.defaultQuery.get.columns(0).link must beSome
+      res.defaultQuery.get.columns(0).link.get.parameter must beSome
     }
 
     "Create a page with link with custom title" in {

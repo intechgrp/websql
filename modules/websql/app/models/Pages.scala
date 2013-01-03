@@ -4,7 +4,7 @@ import play.api.templates._
 
 case class Column(queryCol:String, title:String, link:Option[Link]=None)
 
-case class Link(toPage:String, parameterName:Option[String]=None, title:Option[String]=None)
+case class Link(toPage:String, parameter:Option[Parameter]=None, title:Option[String]=None)
 
 trait Query{
   def queryString:String
@@ -27,6 +27,7 @@ trait Parameter{
 
 case class PostParameter(name:String) extends Parameter
 case class GetParameter(name:String) extends Parameter
+case class PathParameter(name:String) extends Parameter
 
 case class Page(
     id:String,
