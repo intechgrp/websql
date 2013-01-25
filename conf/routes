@@ -8,7 +8,7 @@ GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
 GET     /                           controllers.Application.index
 GET     /editSite                   controllers.Application.editSiteDesc
-GET     /saveSite                   controllers.Application.saveSiteDesc(source:String)
+POST    /saveSite                   controllers.Application.saveSiteDesc
 
 
 POST    /login                      controllers.WebSQL.login

@@ -23,8 +23,15 @@ object Application extends Controller {
     Ok(views.html.editSiteDesc(website.SiteUtils.siteDescSource))
   }
 
-  def saveSiteDesc(source: String) = Action {
-    website.SiteUtils.flushSiteDescSource(source)
+  def saveSiteDesc = Action {request=>
+    println(request.body)
+    request.body.asFormUrlEncoded.map{
+      _.get("source") match {
+        case Some(source +: _) => 
+          website.SiteUtils.flushSiteDescSource(source)
+        case _ => 
+      }
+    }
     Redirect("/editSite")
   }
 
