@@ -64,11 +64,16 @@
                     function saveSite() {
                         var srclines = editor.getSession().getDocument().getAllLines();
                         var srcjson = JSON.stringify(srclines);
-                        parent.location = "/saveSite?source=" + srcjson;
+                        //parent.location = "/saveSite?source=" + srcjson;
+                        $("#editSiteForm > input").val(srcjson);
+                        $("#editSiteForm").submit();
                         }
                 </script>
             <hr>
     </div> <!-- /container -->
+    <form id="editSiteForm" method="POST" action="/saveSite">
+        <input type="hidden" name="source" value=""/>
+    </form>
     </body>
 </html>
 
