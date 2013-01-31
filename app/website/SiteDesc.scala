@@ -19,7 +19,8 @@ class SiteDesc extends Website {
     "Liste des Clients"     -> "clients",
     "Liste des Comptes"     -> "comptes",
     "Rechercher un compte"  -> "rechercheCompte",
-    "Mes comptes"           -> "myAccounts"
+    "Mes comptes"           -> "myAccounts",
+    "Gros comptes"          -> "bigAccounts"
   )
 
   override val pages = List[Page](
@@ -28,7 +29,7 @@ class SiteDesc extends Website {
         withQuery "SELECT CLI.NOM,CLI.PRENOM,CLI.ID FROM COMPTE CPT, CLIENT CLI WHERE CPT.SOLDE >= 10000 AND CLI.ID = CPT.CLIENT"
         withColumn
             "ID" -> "Détail" linkedTo "client" as "idClient" named "Détail du client",
-
+    
 
     /* List of all clients, with a link to detail page of a client */
     listPage("clients") 
@@ -99,6 +100,7 @@ class SiteDesc extends Website {
   )
 
 }
+
 
 
 
