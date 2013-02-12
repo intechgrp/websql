@@ -13,13 +13,23 @@ object ParameterValue{
     ParameterValue(
       parameter.name,
       parameter match {
-        case GetParameter(paramName) =>
-          for (values <- request.queryString.get(paramName)) yield values.head
-        case PostParameter(paramName) =>
+        case GetParameter(paramName,default) =>
+          request.queryString.get(paramName) match {
+            case None =>
+              default
+            case Some(list) if list.size == 0 =>
+              default
+            case Some(Seq("")) =>
+              default
+            case Some(list) =>
+              Some(list.head)
+          }
+
+        case PostParameter(paramName,_) =>
           request.body.asFormUrlEncoded.map{formData=>
               for (values <- formData.get(paramName)) yield values.head
             }.getOrElse(None)
-        case PathParameter(paramName) =>
+        case PathParameter(paramName,_) =>
           request.uri match {
             case PathParameterExtractor(value)  => Some(value)
             case _                              =>  None

@@ -23,11 +23,14 @@ case class SimpleQuery(queryString:String,columns:Seq[Column]) extends Query
 
 trait Parameter{
   def name:String
+  def defaultValue:Option[String]
 }
 
-case class PostParameter(name:String) extends Parameter
-case class GetParameter(name:String) extends Parameter
-case class PathParameter(name:String) extends Parameter
+case class PostParameter(name:String,defaultValue:Option[String]=None) extends Parameter
+case class GetParameter(name:String,defaultValue:Option[String]=None) extends Parameter {
+  def withDefaultValue(value:String) = this.copy(defaultValue=Some(value))
+}
+case class PathParameter(name:String,defaultValue:Option[String]=None) extends Parameter
 
 case class Page(
     id:String,

@@ -64,6 +64,8 @@ object DSL{
   def form(name:String) = PostParameter(name)
   def path(name:String) = PathParameter(name)
 
+  def url(name:String, defaultValue:String) = GetParameter(name,Some(defaultValue))
+
   private[DSL] class SimpleColumnLinkOp(val page:Page, val query:SimpleQuery, val column:Column, val link:Link){
     def as(pName:String) = new SimpleColumnLinkOp(page, query, column, link.copy(parameter = Some(GetParameter(pName))))
     def asPath = new SimpleColumnLinkOp(page, query, column, link.copy(parameter = Some(PathParameter("path"))))
@@ -81,5 +83,5 @@ object DSL{
     def withQuery(newQuery:NamedQuery) = new PageNamedQueryOp(page.copy(namedQueries = page.namedQueries :+ query.copy(columns=query.columns :+ column.copy(link=Some(link)))),newQuery)
     def withQuery(newQuery:SimpleQuery) = new PageSimpleQueryOp(page.copy(namedQueries = page.namedQueries :+ query.copy(columns=query.columns :+ column.copy(link=Some(link)))),newQuery)
   }
-  
+
 }

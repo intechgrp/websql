@@ -9,8 +9,8 @@ object Helpers{
     Html("""<a href="%s%s">%s</a>""".format(
         link.toPage,
         link.parameter.collect{
-          case GetParameter(pName)  => "?" + pName + "=" + col._2
-          case PathParameter(_)     => "/" + col._2
+          case GetParameter(pName,_)  => "?" + pName + "=" + col._2
+          case PathParameter(_,_)     => "/" + col._2
         }.getOrElse("?" + col._1 + "=" + col._2),
         link.title.getOrElse(col._2)
       ))
