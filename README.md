@@ -1,3 +1,5 @@
+#This is the very first version of the tool. Don't use it we'll come back with the latest version soon#
+
 WebSql
 =====================================
 
